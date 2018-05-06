@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Sales
  * @subpackage  Axis_Sales_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -236,6 +236,7 @@ class Axis_Sales_Model_Order_Status_Run
 
     public function __call($call, $argv)
     {
-        return in_array($call, Axis_Collect_OrderStatus::collect());
+        $statuses = Axis::model('sales/option_order_status')->toArray();
+        return in_array($call, $statuses);
     }
 }

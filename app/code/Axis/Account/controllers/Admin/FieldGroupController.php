@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Account
  * @subpackage  Axis_Account_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -79,7 +79,7 @@ class Axis_Account_Admin_FieldGroupController extends Axis_Admin_Controller_Back
         unset($data['group']['customer_field_group_id']);
         unset($data['group']['group_label']);
         unset($data['group']['language_id']);
-        foreach (array_keys(Axis_Collect_Language::collect()) as $languageId) {
+        foreach (Axis::model('locale/option_language') as $languageId => $_n) {
             $label = isset($rowset[$languageId]['group_label']) ?
                 $rowset[$languageId]['group_label'] : '';
 

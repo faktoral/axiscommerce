@@ -92,7 +92,7 @@ Locale.module("core", {
     "File name": "Ім'я файла",
     "Site": "Сайт",
     "Language": "Мова",
-    "Product SKU": "Складський номер",
+    "Product SKU": "Артикул",
     "Stock status": "Статус",
     "Price from": "Ціна від",
     "Qty from": "Кількість від",
@@ -364,7 +364,7 @@ Locale.module("core", {
     "Save & Continue Edit": "Зберегти та продовжити редагування",
     "Base Image": "Базове зображення",
     "Listing Image": "Зображення для списка",
-    "SKU": "Складський номер",
+    "SKU": "Артикул",
     "Short Description": "Короткий опис",
     "Set As New From": "Новий з",
     "Set As New To": "Новий до",
@@ -409,7 +409,7 @@ Locale.module("core", {
     "Media browser": "Переглядач медіа",
     "You are going to generate {count} variations. \nDuring this process, browser may not respond for a while. \nAre you sure?": "Ви намагаєтесь згенерувати {count} варіацій. \nПід час цього процесу можливе зависання браузера на деякий час. \nВи впевнені?",
     "Enter the default quantity for these variations": "Введіть кількість по-замовчуванню для цих варіацій",
-    "SKU prefix": "Префікс складського номеру",
+    "SKU prefix": "Префікс артикула",
     "Default data": "Дані по-замовчуванню",
     "Day": "День",
     "Week": "Тиждень",
@@ -514,5 +514,10 @@ Locale.module("core", {
     "Basic Configuration": "Базова конфігурація",
     "Copy blocks and layouts from": "Копіювати блоки та макети з",
     "Place the generated file under the AXIS_ROOT folder.<br/> Press Ok to generate the file.": "Покладіть згенерований файл до кореневой директорії сайту.<br/> Натисніть Ок, щоб згенерувати файл.",
-    "Are you sure want to delete old search indexes and create new for all products and cms pages?\nThis can take a while.": "Ви дійсно бажаєте видалити всі індекси та створити нові?\nЦе може зайняти деякий час."
+    "Are you sure want to delete old search indexes and create new for all products and cms pages?\nThis can take a while.": "Ви дійсно бажаєте видалити всі індекси та створити нові?\nЦе може зайняти деякий час.",
+    "New Question": "Нове питання",
+    "New Customer": "Новий користувач",
+    "Resource": "Ресурс",
+    'Price to': 'Ціна до',
+    "Related Products": "Супутні товари"
 });

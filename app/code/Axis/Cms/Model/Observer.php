@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Cms
  * @subpackage  Axis_Cms_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -48,7 +48,8 @@ class Axis_Cms_Model_Observer
                         'module'        => 'Axis_Cms',
                         'controller'    => 'page',
                         'action'        => 'index',
-                        'route'         => 'admin/cms'
+                        'route'         => 'admin/axis/cms',
+                        'resource'      => 'admin/axis/cms/page/index'
                     ),
                     'cms/block' => array(
                         'label'         => 'Static Blocks',
@@ -56,7 +57,8 @@ class Axis_Cms_Model_Observer
                         'module'        => 'Axis_Cms',
                         'controller'    => 'block',
                         'action'        => 'index',
-                        'route'         => 'admin/cms'
+                        'route'         => 'admin/axis/cms',
+                        'resource'      => 'admin/axis/cms/block/index'
                     ),
                     'cms/comment' => array(
                         'label'         => 'Page Comments',
@@ -64,7 +66,8 @@ class Axis_Cms_Model_Observer
                         'module'        => 'Axis_Cms',
                         'controller'    => 'comment',
                         'action'        => 'index',
-                        'route'         => 'admin/cms'
+                        'route'         => 'admin/axis/cms',
+                        'resource'      => 'admin/axis/cms/comment/index'
                     )
                 )
             )

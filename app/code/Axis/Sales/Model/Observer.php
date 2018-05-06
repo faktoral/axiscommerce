@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Sales
  * @subpackage  Axis_Sales_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -41,6 +41,8 @@ class Axis_Sales_Model_Observer
     public function notifyAdminNewOrder(Axis_Sales_Model_Order_Row $order)
     {
         try {
+            $mailBoxes = Axis::model('core/option_mail_boxes');
+            
             $mail = new Axis_Mail();
             $mail->setLocale(Axis::config('locale/main/language_admin'));
             $mail->setConfig(array(
@@ -49,13 +51,11 @@ class Axis_Sales_Model_Observer
                 'data'    => array(
                     'order' => $order
                 ),
-                'to' => Axis_Collect_MailBoxes::getName(
-                    Axis::config('sales/order/email')
-                )
+                'to' => $mailBoxes[Axis::config('sales/order/email')]
             ));
             $mail->send();
             return true;
-        } catch (Zend_Mail_Transport_Exception $e) {
+        } catch (Zend_Mail_Exception $e) {
             return false;
         }
     }
@@ -88,7 +88,7 @@ class Axis_Sales_Model_Observer
 //                );
 //            }
             return true;
-        } catch (Zend_Mail_Transport_Exception $e) {
+        } catch (Zend_Mail_Exception $e) {
             Axis::message()->addError(
                 Axis::translate('core')->__('Mail sending was failed.')
             );
@@ -110,7 +110,8 @@ class Axis_Sales_Model_Observer
                         'order'         => 10,
                         'module'        => 'Axis_Sales',
                         'controller'    => 'order',
-                        'route'         => 'admin/sales'
+                        'route'         => 'admin/axis/sales',
+                        'resource'      => 'admin/axis/sales/order'
                     )
                 )
             ),
@@ -122,7 +123,8 @@ class Axis_Sales_Model_Observer
                         'translator'    => 'Axis_Sales',
                         'module'        => 'Axis_Sales',
                         'controller'    => 'order-status',
-                        'route'         => 'admin/sales'
+                        'route'         => 'admin/axis/sales',
+                        'resource'      => 'admin/axis/sales/order-status'
                     )
                 )
             )

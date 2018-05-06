@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Admin
  * @subpackage  Axis_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -37,7 +37,7 @@ class Axis_Admin_UserController extends Axis_Admin_Controller_Back
     {
         $this->view->pageTitle = Axis::translate('admin')->__('Administrators');
         $this->view->roles = Axis::single('admin/acl_role')
-            ->select(array('id', 'role_name'))
+            ->select(array('id', 'name'))
             ->fetchPairs();
         $this->render();
     }

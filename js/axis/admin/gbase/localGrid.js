@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Axis.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -170,7 +170,7 @@ function ajaxExportItems(params, clearSession){
     }
 
     Ext.Ajax.request({
-        url: Axis.getUrl('googlebase/export'),
+        url: Axis.getUrl('google-base/export'),
         params: Ext.apply(params, {
             clearSession: clearSession
         }),

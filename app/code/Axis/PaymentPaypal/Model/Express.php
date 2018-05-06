@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_PaymentPaypal
  * @subpackage  Axis_PaymentPaypal_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -78,14 +78,20 @@ class Axis_PaymentPaypal_Model_Express extends Axis_PaymentPaypal_Model_Abstract
             Axis_Message::getInstance()->addError($message);
             return false;
         }
-        $options['PAYMENTACTION'] = 'Authorization';
-        if ($this->_config->transactionMode == 'Order') {
-            $options['PAYMENTACTION'] = 'Order';
-        }
-        if ($this->_config->transactionMode == 'Sale') {
-            $options['PAYMENTACTION'] = 'Sale';
-        }
+        switch ($this->_config->paymentAction) {
+            case Axis_PaymentPaypal_Model_Option_Express_PaymentAction::ORDER:
 
+                $options['PAYMENTACTION'] = Axis_PaymentPaypal_Model_Option_Express_PaymentAction::ORDER;
+                break;
+            case Axis_PaymentPaypal_Model_Option_Express_PaymentAction::SALE:
+
+                $options['PAYMENTACTION'] = Axis_PaymentPaypal_Model_Option_Express_PaymentAction::SALE;
+                break;
+            default:
+                $options['PAYMENTACTION'] = Axis_PaymentPaypal_Model_Option_Express_PaymentAction::AUTHORIZATION;
+                break;
+        }
+        
         $view = Axis::app()->getBootstrap()->getResource('layout')->getView();
         $returnUrl = $view->href('/paymentpaypal/express/details', true);
         $cancelUrl = $view->href('/paymentpaypal/express/cancel', true);
@@ -211,14 +217,19 @@ class Axis_PaymentPaypal_Model_Express extends Axis_PaymentPaypal_Model_Abstract
             $response['SHIPTOSTREET2'] = '';
         }
 
-        // accomodate PayPal bug which incorrectly treats 'Yukon Territory'
-        // as YK instead of ISO standard of YT.
-        if ($response['SHIPTOSTATE'] == 'YK') {
-            $response['SHIPTOSTATE'] = 'YT';
-        }
-        // same with Newfoundland
-        if ($response['SHIPTOSTATE'] == 'NF') {
-            $response['SHIPTOSTATE'] = 'NL';
+        if (!isset($response['SHIPTOSTATE'])) {
+            $response['SHIPTOSTATE'] = isset($response['SHIPTOCITY']) ?
+                $response['SHIPTOCITY'] : '';
+        } else {
+            // accomodate PayPal bug which incorrectly treats 'Yukon Territory'
+            // as YK instead of ISO standard of YT.
+            if ($response['SHIPTOSTATE'] == 'YK') {
+                $response['SHIPTOSTATE'] = 'YT';
+            }
+            // same with Newfoundland
+            if ($response['SHIPTOSTATE'] == 'NF') {
+                $response['SHIPTOSTATE'] = 'NL';
+            }
         }
 
         return $response;

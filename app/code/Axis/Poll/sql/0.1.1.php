@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Poll
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Poll_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -105,24 +105,13 @@ class Axis_Poll_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
 
         ");
 
-        Axis::single('admin/acl_resource')
-            ->add('admin/poll', 'Polls All')
-            ->add('admin/poll_index', 'Polls')
-            ->add("admin/poll_index/clear")
-            ->add("admin/poll_index/delete")
-            ->add("admin/poll_index/get-question")
-            ->add("admin/poll_index/index")
-            ->add("admin/poll_index/list")
-            ->add("admin/poll_index/quick-save")
-            ->add("admin/poll_index/save");
-
         Axis::single('core/page')
             ->add('poll/*/*');
     }
 
     public function down()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
             DROP TABLE IF EXISTS `{$installer->getTable('poll_answer')}`;
@@ -131,8 +120,6 @@ class Axis_Poll_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
             DROP TABLE IF EXISTS `{$installer->getTable('poll_question_site')}`;
             DROP TABLE IF EXISTS `{$installer->getTable('poll_vote')}`;
         ");
-
-        Axis::single('admin/acl_resource')->remove('admin/poll');
 
         //Axis::single('core/template_box')->remove('Axis_Poll_Poll');
 

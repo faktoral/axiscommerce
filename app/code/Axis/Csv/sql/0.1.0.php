@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Csv
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Csv_Upgrade_0_1_0 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -65,27 +65,15 @@ class Axis_Csv_Upgrade_0_1_0 extends Axis_Core_Model_Migration_Abstract
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
         ");
-
-        Axis::single('admin/acl_resource')
-            ->add('admin/csv', 'Import/Export')
-            ->add("admin/csv/delete")
-            ->add("admin/csv/get-list")
-            ->add("admin/csv/get-supported-types")
-            ->add("admin/csv/index")
-            ->add("admin/csv/run")
-            ->add("admin/csv/save");
     }
 
     public function down()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
             DROP TABLE IF EXISTS `{$installer->getTable('csv_profile')}`;
             DROP TABLE IF EXISTS `{$installer->getTable('csv_profile_filter')}`;
         ");
-
-        Axis::single('admin/acl_resource')
-            ->remove('admin/csv');
     }
 }

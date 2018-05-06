@@ -20,10 +20,14 @@
  *
  * @category    Axis
  * @package     Axis_Core
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
+if (true === version_compare(phpversion(), '5.2.4', '<')) {
+    echo 'Update your PHP version to 5.2.4 or newer. Current PHP version: ' . phpversion();
+    exit;
+}
 define('AXIS_ROOT', realpath(dirname(__FILE__)));
 
 if (!file_exists('./app/etc/config.php')) {
@@ -33,22 +37,16 @@ if (!file_exists('./app/etc/config.php')) {
         $extra = 'install';
         header("Location: http://$host$uri/$extra/");
     }
-    exit();
+    exit;
 }
 
 set_include_path(
-    realpath('library')  . PATH_SEPARATOR
-    . realpath('app/code') . PATH_SEPARATOR
-    . get_include_path()
+    realpath('library')
+    . PATH_SEPARATOR . realpath('app/code')
+//    . PATH_SEPARATOR . get_include_path() // commented to fix open_basedir restriction. See Zend_Loader::isReadable()
 );
 
-
-@include_once 'Axis/Application.php';
-if (!class_exists('Zend_Application')) {
-    echo 'Please, copy Zend Framework to the "library" folder: '
-        . realpath('library');
-    exit();
-}
+include_once 'Axis/Application.php';
 
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV',

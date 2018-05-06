@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Sales
  * @subpackage  Axis_Sales_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -43,13 +43,13 @@ class Axis_Sales_Model_Order_Row extends Axis_Db_Table_Row
      */
     public function setStatus($statusId, $comments = '', $notifyCustomer = false)
     {
-        if (is_string($statusId)
-            && in_array($statusId, array_values(Axis_Collect_OrderStatus::collect()))) {
+        $statuses = Axis::model('sales/option_order_status')->toArray();
+        if (is_string($statusId) && in_array($statusId, $statuses)) {
 
             $status = $statusId;
             $statusId = Axis::single('sales/order_status')->getIdByName($status);
         } else {
-            $status = Axis_Collect_OrderStatus::getName($statusId);
+            $status = $statuses[$statusId];
         }
 
         /* Relation exist or not */
@@ -163,7 +163,7 @@ class Axis_Sales_Model_Order_Row extends Axis_Db_Table_Row
                 );
             }
             return true;
-        } catch (Zend_Mail_Transport_Exception $e) {
+        } catch (Zend_Mail_Exception $e) {
             Axis::message()->addError(
                 Axis::translate('core')->__('Mail sending was failed.')
                 . ' ' . $e->getMessage()

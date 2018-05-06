@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Core
  * @subpackage  Axis_Core_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -66,7 +66,7 @@ class Axis_Core_Model_Template_Mail extends Axis_Db_Table
         }
         
         $info = $info->toArray();
-        $templates = Axis_Collect_MailTemplate::collect();
+        $templates = Axis::model('core/option_mail_template')->toArray();
         
         $file = Axis::config()->system->path . '/app/design/mail/' 
               . $templates[$info['template']] . '_'

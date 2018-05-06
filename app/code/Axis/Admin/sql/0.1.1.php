@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Admin
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,13 +30,8 @@ class Axis_Admin_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        Axis::single('admin/acl_resource')->rename(
+        Axis::single('admin/acl_rule')->rename(
             'admin/template_index/get-info', 'admin/template_index/load'
         );
-    }
-
-    public function down()
-    {
-
     }
 }

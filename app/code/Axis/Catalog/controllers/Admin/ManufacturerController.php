@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Catalog
  * @subpackage  Axis_Catalog_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -78,7 +78,7 @@ class Axis_Catalog_Admin_ManufacturerController extends Axis_Admin_Controller_Ba
             );
 
         $data = array();
-        $languageIds = array_keys(Axis_Collect_Language::collect());
+        $languageIds = array_keys(Axis::model('locale/option_language')->toArray());
         foreach ($select->fetchAll() as $manufacturer) {
             if (!isset($data[$manufacturer['id']])) {
                 $data[$manufacturer['id']] = $manufacturer;

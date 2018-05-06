@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Contacts
  * @subpackage  Axis_Contacts_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -45,7 +45,8 @@ class Axis_Contacts_Model_Observer
                         'module'        => 'Axis_Contacts',
                         'controller'    => 'index',
                         'action'        => 'index',
-                        'route'         => 'admin/contacts'
+                        'route'         => 'admin/axis/contacts',
+                        'resource'      => 'admin/axis/contacts/index/index'
                     )
                 )
             )

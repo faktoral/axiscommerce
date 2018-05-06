@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Sitemap
  * @subpackage  Axis_Sitemap_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -42,7 +42,8 @@ class Axis_Sitemap_Model_Observer
                         'order'         => 50,
                         'translator'    => 'Axis_Sitemap',
                         'module'        => 'Axis_Sitemap',
-                        'route'         => 'admin/sitemap'
+                        'route'         => 'admin/axis/sitemap',
+                        'resource'      => 'admin/axis/sitemap'
                     )
                 )
             )

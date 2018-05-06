@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Sitemap
  * @subpackage  Axis_Sitemap_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -38,7 +38,6 @@ class Axis_Sitemap_Admin_IndexController extends Axis_Admin_Controller_Back
         $this->view->pageTitle = Axis::translate('sitemap')->__('Sitemap');
         $this->view->sitesList = Axis::single('core/site')->fetchAll()
             ->toArray();
-        $this->view->sites = Axis_Collect_Site::collect();
         $this->view->crawlers = array_values(
             Axis::model('sitemap/crawler')->toArray()
         );

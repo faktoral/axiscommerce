@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Import
  * @subpackage  Axis_Import_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -41,7 +41,6 @@ class Axis_Import_Admin_IndexController extends Axis_Admin_Controller_Back
     public function indexAction()
     {
         $this->view->pageTitle = Axis::translate('admin')->__("Import");
-        $this->view->languages = Axis_Collect_Language::collect();
         $this->render();
     }
 

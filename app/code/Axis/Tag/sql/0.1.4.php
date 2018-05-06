@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Tag
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,17 +30,12 @@ class Axis_Tag_Upgrade_0_1_4 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        Axis::single('admin/acl_resource')
+        Axis::single('admin/acl_rule')
             ->rename('admin/tag_index/index', 'admin/tag/index')
             ->rename('admin/tag_index/list', 'admin/tag/list')
             ->rename('admin/tag_index/save', 'admin/tag/batch-save')
             ->rename('admin/tag_index/delete', 'admin/tag/remove')
-            ->remove('admin/tag_index')
         ;
 
-    }
-
-    public function down()
-    {
     }
 }

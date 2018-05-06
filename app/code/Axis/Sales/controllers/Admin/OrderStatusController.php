@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Sales
  * @subpackage  Axis_Sales_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -44,20 +44,17 @@ class Axis_Sales_Admin_OrderStatusController extends Axis_Admin_Controller_Back
         $_rowset = Axis::single('sales/order_status')->getList();
         $data = array();
         foreach ($_rowset as $_row) {
-            $data[$_row['id']] = array(
-                'id'     => $_row['id'],
-                'name'   => $_row['name'],
-                'system' => $_row['system'],
-                'status_name_' . $_row['language_id'] => $_row['status_name']
-            );
+            if (empty($data[$_row['id']])) {
+                $data[$_row['id']] = $_row;
+            }
+            $data[$_row['id']]['status_name_' . $_row['language_id']] = $_row['status_name'];
         }
 
         return $this->_helper->json
             ->setData(array_values($data))
-            ->sendSuccess()
-        ;
+            ->sendSuccess();
     }
-    
+
     public function loadAction()
     {
         $statusId = $this->_getParam('statusId', false);
@@ -81,7 +78,7 @@ class Axis_Sales_Admin_OrderStatusController extends Axis_Admin_Controller_Back
                 ->where('status_id = ?', $statusId)
                 ->fetchAssoc();
 
-        foreach (array_keys(Axis_Collect_Language::collect()) as $languageId) {
+        foreach (array_keys(Axis::model('locale/option_language')->toArray()) as $languageId) {
             $_t['status_name[' . $languageId . ']'] = isset($statusText[$languageId]) ?
                 $statusText[$languageId]['status_name'] : '';
         }
@@ -104,7 +101,7 @@ class Axis_Sales_Admin_OrderStatusController extends Axis_Admin_Controller_Back
 
         $model       = Axis::model('sales/order_status');
         $modelLabel  = Axis::model('sales/order_status_text');
-        $languageIds = array_keys(Axis_Collect_Language::collect());
+        $languageIds = array_keys(Axis::model('locale/option_language')->toArray());
 
         $row = $model->getRow($_row);
         $row->system = (int)$row->system;
@@ -133,7 +130,7 @@ class Axis_Sales_Admin_OrderStatusController extends Axis_Admin_Controller_Back
         }
         return $this->_helper->json->sendSuccess();
     }
-    
+
     public function batchSaveAction()
     {
         $_rowset = Zend_Json::decode($this->_getParam('data'));
@@ -144,7 +141,7 @@ class Axis_Sales_Admin_OrderStatusController extends Axis_Admin_Controller_Back
 
         $model       = Axis::model('sales/order_status');
         $modelLabel  = Axis::model('sales/order_status_text');
-        $languageIds = array_keys(Axis_Collect_Language::collect());
+        $languageIds = array_keys(Axis::model('locale/option_language')->toArray());
 
         foreach ($_rowset as $_row) {
             $row = $model->getRow($_row);
@@ -208,7 +205,7 @@ class Axis_Sales_Admin_OrderStatusController extends Axis_Admin_Controller_Back
         $parentId = $this->_getParam('parentId', null);
 
         $model = Axis::single('sales/order_status');
-        
+
         if (null === $parentId && $this->_hasParam('statusId')) {
             $statusId = (int) $this->_getParam('statusId');
             if (!$model->getSystem($statusId)) {
@@ -223,13 +220,10 @@ class Axis_Sales_Admin_OrderStatusController extends Axis_Admin_Controller_Back
         $_rowset = $model->getList($parentId);
         $_data = array();
         foreach ($_rowset as $_row) {
-            
-            $_data[$_row['id']] = array(
-                'id'     => $_row['id'],
-                'name'   => $_row['name'],
-                'system' => $_row['system'],
-                'status_name_' . $_row['language_id'] => $_row['status_name']
-            );
+            if (empty($_data[$_row['id']])) {
+                $_data[$_row['id']] = $_row;
+            }
+            $_data[$_row['id']]['status_name_' . $_row['language_id']] = $_row['status_name'];
         }
 
         $data = array();

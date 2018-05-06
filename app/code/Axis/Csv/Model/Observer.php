@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Csv
  * @subpackage  Axis_Csv_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -50,7 +50,8 @@ class Axis_Csv_Model_Observer
                                 'module'        => 'Axis_Csv',
                                 'controller'    => 'index',
                                 'action'        => 'index',
-                                'route'         => 'admin/csv'
+                                'route'         => 'admin/axis/csv',
+                                'resource'      => 'admin/axis/csv/index/index'
                             )
                         )
                     )

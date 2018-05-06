@@ -19,15 +19,15 @@
  * 
  * @category    Axis
  * @package     Axis_Cms
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
-$router->addRoute('admin/log', new Axis_Controller_Router_Route_Back(
+$router->addRoute('admin/axis/log', new Axis_Controller_Router_Route_Back(
     'log/:action/*',
     array(
         'module' => 'Axis_Log',
         'controller' => 'index',
         'action' => 'index'
     )
-), 'admin');
+), 'admin/axis/admin');

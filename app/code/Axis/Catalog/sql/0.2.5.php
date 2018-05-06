@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Catalog
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Catalog_Upgrade_0_2_5 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -67,14 +67,11 @@ class Axis_Catalog_Upgrade_0_2_5 extends Axis_Core_Model_Migration_Abstract
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
         ");
-
-        Axis::single('admin/acl_resource')
-            ->add("admin/catalog_index/update-price-index");
     }
 
     public function down()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -82,7 +79,5 @@ class Axis_Catalog_Upgrade_0_2_5 extends Axis_Core_Model_Migration_Abstract
 
         ");
 
-        Axis::single('admin/acl_resource')
-            ->remove("admin/catalog_index/update-price-index");
     }
 }

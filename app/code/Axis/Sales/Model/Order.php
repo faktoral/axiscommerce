@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Sales
  * @subpackage  Axis_Sales_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -84,7 +84,7 @@ class Axis_Sales_Model_Order extends Axis_Db_Table
         $orderRow->order_status_id = 0;
         $orderRow->ip_address = $_SERVER['REMOTE_ADDR'];
         $orderRow->customer_comment = $storage->customer_comment;
-        $orderRow->locale = Axis_Locale::getLocale()->toString();
+        $orderRow->locale = Axis::locale()->toString();
 
         /* build delivery & billing arrays */
         $addressFormatId = Axis::config('core/store/addressFormat');
@@ -141,11 +141,6 @@ class Axis_Sales_Model_Order extends Axis_Db_Table
 
         // update product stock
         $orderRow->setStatus('pending');
-
-        // Clear cart after checkout
-        if ('development' != Axis::app()->getEnvironment()) {
-            $checkout->getCart()->clear();
-        }
 
         return $orderRow;
     }

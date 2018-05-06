@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Account
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,12 +30,13 @@ class Axis_Account_Upgrade_0_2_1 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        Axis::single('core/config_field')
-            ->add('account/address_form/country_id_allow', 'Allowed Countries', 0, 'multiple', array('model' => 'Country'));
-    }
+        $this->getConfigBuilder()
+            ->section('account')
+                ->section('address_form')
+                    ->option('country_id_allow', 'Allowed Countries', 0)
+                        ->setType('multiple')
+                        ->setModel('location/option_address_country')
 
-    public function down()
-    {
-        //
+            ->section('/');
     }
 }

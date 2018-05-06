@@ -14,16 +14,16 @@ $this->setButtons(array(
         'title' => 'Revoke Token',
         'class' => 'alt-button',
         'onclick' => "Ext.Ajax.request({
-            url: '{$this->href('/googlebase/revoke-token')}',
+            url: '{$this->href('/google-base/revoke-token')}',
             method: 'get',
             callback: function() {
-                window.location = '{$this->href('/googlebase')}';
+                window.location = '{$this->href('/google-base')}';
             }
         })"
     )
 ));
 
-echo $this->formSelect('language', null, null, Axis_Collect_Language::collect());
+echo $this->formSelect('language', null, null, $this->languages);
 echo $this->formSelect('gCountry', null, null, $this->gCountries);
 echo $this->formSelect('targetCountry', null, null, $this->gCountries);
 echo $this->formSelect('currency', null, null, $this->currencies);

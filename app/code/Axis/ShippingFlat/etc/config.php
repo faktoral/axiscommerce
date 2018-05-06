@@ -19,7 +19,7 @@
  * 
  * @category    Axis
  * @package     Axis_ShippingFlat
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 $config = array(
@@ -27,6 +27,9 @@ $config = array(
         'package' => 'Axis_Shipping',
         'name' => 'Flat',
         'version' => '0.1.0',
-        'required' => 0
+        'required' => 0,
+        'depends'  => array(
+            'Axis_Core' => '0.2.9'
+        ),
     )
 );

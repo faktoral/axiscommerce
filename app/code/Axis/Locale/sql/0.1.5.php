@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Locale
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Locale_Upgrade_0_1_5 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        Axis::single('admin/acl_resource')
+        Axis::single('admin/acl_rule')
             ->rename('admin/locale_currency',            'admin/locale/currency')
             ->rename('admin/locale_currency/index',      'admin/locale/currency/index')
             ->rename('admin/locale_currency/list',       'admin/locale/currency/list')
@@ -44,13 +44,7 @@ class Axis_Locale_Upgrade_0_1_5 extends Axis_Core_Model_Migration_Abstract
             ->rename('admin/locale_language/save',   'admin/locale/language/save')
             ->rename('admin/locale_language/delete', 'admin/locale/language/remove')
             ->rename('admin/locale_language/change', 'admin/locale/language/change')
-            ->remove('admin/locale_')
         ;
-
-    }
-
-    public function down()
-    {
 
     }
 }

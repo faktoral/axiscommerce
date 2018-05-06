@@ -19,15 +19,15 @@
  *
  * @category    Axis
  * @package     Axis_Location
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
-$router->addRoute('admin/location', new Axis_Controller_Router_Route_Back(
+$router->addRoute('admin/axis/location', new Axis_Controller_Router_Route_Back(
     'location/:controller/:action/*',
     array(
         'module'     => 'Axis_Location',
         'controller' => 'country',
         'action'     => 'index'
     )
-), 'admin');
+), 'admin/axis/admin');

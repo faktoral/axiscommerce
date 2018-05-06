@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Tag
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Tag_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -62,18 +62,22 @@ class Axis_Tag_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
 
         ");
 
-        Axis::single('core/config_field')
-            ->add('tag', 'Tag', null, null, array('translation_module' => 'Axis_Tag'))
-            ->add('tag/main/customer_status', 'Tag/General/Default customer tag status', 1, 'select', 'Default tag status added by registered customer', array('config_options' => '{"1":"approved","2":"pending","3":"disapproved"}'))
-            ->add('tag/main/guest_status', 'Default guest tag status', 2, 'select', 'Default tag status added by guest', array('config_options' => '{"1":"approved","2":"pending","3":"disapproved"}'));
+        $this->getConfigBuilder()
+            ->section('tag', 'Tag')
+                ->setTranslation('Axis_Tag')
+                ->section('main', 'General')
+                    ->option('customer_status', 'Default customer tag status')
+                        ->setValue(Axis_Tag_Model_Option_Status::APPROVED)
+                        ->setType('select')
+                        ->setDescription('Default tag status added by registered customer')
+                        ->setModel('tag/option_status')
+                    ->option('guest_status', 'Default guest tag status')
+                        ->setValue(Axis_Tag_Model_Option_Status::PENDING)
+                        ->setType('select')
+                        ->setDescription('Default tag status added by guest')
+                        ->setModel('tag/option_status')
 
-        Axis::single('admin/acl_resource')
-            ->add('admin/tag', 'Tags All')
-            ->add('admin/tag_index', 'Tags')
-            ->add("admin/tag_index/delete")
-            ->add("admin/tag_index/index")
-            ->add("admin/tag_index/list")
-            ->add("admin/tag_index/save");
+            ->section('/');
 
         Axis::single('core/page')
             ->add('tag/*/*')
@@ -83,17 +87,15 @@ class Axis_Tag_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
 
     public function down()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
             DROP TABLE IF EXISTS `{$installer->getTable('tag_customer')}`;
             DROP TABLE IF EXISTS `{$installer->getTable('tag_product')}`;
         ");
 
-        Axis::single('core/config_field')->remove('tag');
-        Axis::single('core/config_value')->remove('tag');
-
-        Axis::single('admin/acl_resource')->remove('admin/tag');
+        $this->getConfigBuilder()
+            ->remove('tag');
 
         Axis::single('core/page')
             ->remove('tag/*/*')

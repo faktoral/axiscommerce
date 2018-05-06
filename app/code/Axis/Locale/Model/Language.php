@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Locale
  * @subpackage  Axis_Locale_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -36,30 +36,4 @@ class Axis_Locale_Model_Language extends Axis_Db_Table
     protected $_name = 'locale_language';
     protected $_rowClass = 'Axis_Db_Table_Row';
 
-    /**
-     *
-     * @var array
-     */
-    protected $_localeList = null;
-
-    /**
-     *
-     * @return array
-     */
-    public function getCodeLanguages()
-    {
-        return $this->select(array('locale', 'language'))->fetchPairs();
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getLocaleList()
-    {
-        if (null === $this->_localeList) {
-            $this->_localeList = $this->select('locale')->fetchCol();
-        }
-        return $this->_localeList;
-    }
 }

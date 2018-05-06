@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Checkout
  * @subpackage  Axis_Checkout_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -36,12 +36,6 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
     protected $_name = 'checkout_cart';
 
     /**
-     *
-     * @var int
-     */
-    private $_cartId;
-
-    /**
      * Return customer cart
      *
      * @param int $customerId
@@ -49,27 +43,17 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
      */
     public function getCustomerCart($customerId)
     {
-        $cartId = $this->getIdByCustomerId($customerId);
-        if (!$cartId) {
+        $row = $this->select()
+            ->where('customer_id = ?', $customerId)
+            ->where('site_id = ?', Axis::getSiteId())
+            ->fetchRow()
+        ;
+        if (!$row) {
            return null;
         }
-        $this->_setCartId($cartId);
+        $this->setCartId($row->id);
 
         return $this;
-    }
-
-    /**
-     *
-     * @return bool
-     */
-    protected function _hasCartId()
-    {
-        if (empty(Axis::session()->cartId)
-            || !$this->find(Axis::session()->cartId)->current()) {
-
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -79,31 +63,41 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
      */
     protected function _initCartId()
     {
-        if ($this->_hasCartId()) {
-            $cartId = Axis::session()->cartId;
-        } elseif ($customerId = Axis::getCustomerId()) {
-            $cartId = $this->getIdByCustomerId($customerId);
+        $select = $this->select();
+
+        $sessionCartId = Axis::session()->cartId;
+        $customerId    = Axis::getCustomerId();
+        $siteId        = Axis::getSiteId();
+        $row           = null;
+
+        if (null !== $sessionCartId) {
+            $row = $select->where('id = ?', $sessionCartId)
+                ->where('site_id = ?', $siteId)
+                ->fetchRow();
+        } elseif (null !== $customerId) {
+            $row = $select->where('customer_id = ?', $customerId)
+                ->where('site_id = ?', $siteId)
+                ->fetchRow();
         }
 
-        if (!isset($cartId) || !$cartId) {
-
-            $cartId = $this->insert(array(
-                'site_id' => Axis::getSiteId(),
-                'customer_id' => $customerId ?
-                    $customerId : new Zend_Db_Expr('NULL')
+        if (!$row) {
+            $row = $this->createRow(array(
+                'site_id'     => $siteId,
+                'customer_id' => $customerId ? $customerId : new Zend_Db_Expr('NULL')
             ));
+            $row->save();
         }
 
-        $this->_setCartId($cartId);
+        $this->setCartId($row->id);
 
-        return $cartId;
+        return $row->id;
     }
 
 
     public function unsetCartId()
     {
         Axis::session()->cartId = null;
-        $this->_cartId = null;
+        return $this;
     }
 
     /**
@@ -111,10 +105,10 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
      * @param int $id
      * @return void
      */
-    protected function _setCartId($id)
+    public function setCartId($id)
     {
         Axis::session()->cartId = $id;
-        $this->_cartId = $id;
+        return $this;
     }
 
     /**
@@ -122,10 +116,10 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
      */
     public function getCartId()
     {
-        if (null === $this->_cartId) {
+        if (empty(Axis::session()->cartId)) {
             $this->_initCartId();
         }
-        return $this->_cartId;
+        return Axis::session()->cartId;
     }
 
      /**
@@ -254,6 +248,12 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
 
         $attributes = $modifierAttributes + $variationAttributes;
 
+        Axis::message()->addSuccess(
+            Axis::translate('checkout')->__(
+                'Product was successfully added to your shopping cart'
+            )
+        );
+
         // Check for clon exists
         if (false !== ($clon = $this->_getClon($productId, $attributes))) {
             $this->updateItem(
@@ -281,11 +281,6 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
                 'product_attribute_value'  => $attributeValue
             ));
         }
-        Axis::message()->addSuccess(
-            Axis::translate('checkout')->__(
-                'Product was successfully added to your shopping cart'
-            )
-        );
 
         Axis::dispatch('checkout_cart_add_product_success', array(
             'product'         => $product,
@@ -550,6 +545,15 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
     }
 
     /**
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return (0 === $this->getCount());
+    }
+
+    /**
      * Return customer id
      *
      * @return int
@@ -569,11 +573,13 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
      */
     public function merge()
     {
+        $siteId = Axis::getSiteId();
         if (!$customerId = Axis::getCustomerId()) {
             return false;
         }
         $adapter            = $this->getAdapter();
         $previousCartRow    = $this->select()
+            ->where('site_id = ?', $siteId)
             ->where('customer_id = ?', $customerId)
             ->fetchRow();
 
@@ -626,12 +632,13 @@ class Axis_Checkout_Model_Cart extends Axis_Db_Table
                 ),
                 $adapter->quoteInto('shopping_cart_id = ?', $previousCartRow->id)
             );
-            $this->delete($adapter->quoteInto('customer_id = ?', $customerId));
+            $this->delete(array(
+                'site_id = ?'     => $siteId,
+                'customer_id = ?' => $customerId
+            ));
         }
         $this->update(
-            array(
-                'customer_id' => $customerId
-            ),
+            array('customer_id' => $customerId),
             $adapter->quoteInto('id = ?', $this->getCartId())
         );
         return true;

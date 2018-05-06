@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Account
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -32,11 +32,11 @@ $router->addRoute('account', new Axis_Controller_Router_Route_Front(
     )
 ));
 
-$router->addRoute('admin/account', new Axis_Controller_Router_Route_Back(
+$router->addRoute('admin/axis/account', new Axis_Controller_Router_Route_Back(
     'account/:controller/:action/*',
     array(
         'module'     => 'Axis_Account',
         'controller' => 'index',
         'action'     => 'index'
     )
-), 'admin');
+), 'admin/axis/admin');

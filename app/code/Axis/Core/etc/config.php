@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Core
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 $config = array(
@@ -34,6 +34,13 @@ $config = array(
                     'type'   => 'model',
                     'model'  => 'core/observer',
                     'method' => 'prepareAdminNavigationBox'
+                )
+            ),
+            'config_option_value_row_save_success' => array(
+                'flush_cache' => array(
+                    'type'   => 'model',
+                    'model'  => 'core/observer',
+                    'method' => 'flushConfigOptionCache'
                 )
             )
         )

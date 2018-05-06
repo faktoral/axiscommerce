@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Contacts
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Contacts_Upgrade_0_1_0 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -42,7 +42,11 @@ class Axis_Contacts_Upgrade_0_1_0 extends Axis_Core_Model_Migration_Abstract
           PRIMARY KEY  (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
-        INSERT INTO `{$installer->getTable('contacts_department')}` (`id`, `name`, `email`) VALUES (1, 'Support', 'test@axiscommerce.com'),(2, 'General', 'test@axiscommerce.com'),(3, 'Shopping', 'test@axiscommerce.com'),(4, 'Developers', 'test@axiscommerce.com');
+        INSERT INTO `{$installer->getTable('contacts_department')}` (`id`, `name`, `email`) VALUES
+            (1, 'Support', 'test@axiscommerce.com'),
+            (2, 'General', 'test@axiscommerce.com'),
+            (3, 'Shopping', 'test@axiscommerce.com'),
+            (4, 'Developers', 'test@axiscommerce.com');
 
         -- DROP TABLE IF EXISTS `{$installer->getTable('contacts_message')}`;
         CREATE TABLE  `{$installer->getTable('contacts_message')}` (
@@ -62,25 +66,7 @@ class Axis_Contacts_Upgrade_0_1_0 extends Axis_Core_Model_Migration_Abstract
 
         ");
 
-        Axis::single('admin/acl_resource')
-            ->add('admin/contacts', 'Contacts')
-            ->add('admin/contacts_index', 'Contact Us')
-            ->add("admin/contacts_index/delete")
-            ->add("admin/contacts_index/delete-department")
-            ->add("admin/contacts_index/get-department")
-            ->add("admin/contacts_index/get-departments")
-            ->add("admin/contacts_index/index")
-            ->add("admin/contacts_index/list")
-            ->add("admin/contacts_index/save-department")
-            ->add("admin/contacts_index/send")
-            ->add("admin/contacts_index/set-status");
-
         Axis::single('core/page')
             ->add('contacts/*/*');
-    }
-
-    public function down()
-    {
-
     }
 }

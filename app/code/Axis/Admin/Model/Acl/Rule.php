@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Admin
  * @subpackage  Axis_Admin_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -35,4 +35,23 @@ class Axis_Admin_Model_Acl_Rule extends Axis_Db_Table
 {
     protected $_name = 'admin_acl_rule';
 
+    /**
+     *
+     * @param string $oldResource
+     * @param string $newResource
+     * @return Axis_Admin_Model_Acl_Rule 
+     */
+    public function rename($oldResource, $newResource)
+    {
+        $rowset = $this->select()
+           ->where('resource_id = ?', $oldResource)
+           ->fetchRowset();
+
+        foreach ($rowset as $row) {
+           $row->resource_id = $newResource;
+           $row->save();
+        }
+
+        return $this;
+   }
 }

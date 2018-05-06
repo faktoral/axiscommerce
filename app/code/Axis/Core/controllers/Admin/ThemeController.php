@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Core
  * @subpackage  Axis_Core_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -136,26 +136,18 @@ class Admin_ThemeController extends Axis_Admin_Controller_Back
                 ->setUseDispersion(false)
                 ->save(Axis::config('system/path') . '/var/templates');
 
-            $result = array(
-                'success' => true,
-                'data' => array(
-                    'path' => $file['path'],
-                    'file' => $file['file']
-                )
-            );
         } catch (Axis_Exception $e) {
-            $result = array(
-                'success' => false,
-                'messages' => array(
-                    'error' => $e->getMessage()
-                )
-            );
             return $this->getResponse()->appendBody(
-                Zend_Json::encode($result)
+                Zend_Json::encode(array(
+                    'success' => false,
+                    'messages' => array(
+                        'error' => $e->getMessage()
+                    )
+                ))
             );
         }
 
-        $themeFile = $result['data']['path'] . $result['data']['file'];
+        $themeFile = $file['path'] . $file['file'];
         $model = Axis::model('core/template');
 
         if (!$this->_getParam('overwrite_existing') &&

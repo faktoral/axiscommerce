@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Catalog
  * @subpackage  Axis_Catalog_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -41,7 +41,7 @@ class Axis_Catalog_Model_Product_Manufacturer_Row extends Axis_Db_Table_Row
     public function setDescriptions(array $dataset) 
     {
         $model = Axis::model('catalog/product_manufacturer_description');
-        foreach (array_keys(Axis_Collect_Language::collect()) as $languageId) {
+        foreach (array_keys(Axis::model('locale/option_language')->toArray()) as $languageId) {
             if (!isset($dataset[$languageId])) {
                 continue;
             }

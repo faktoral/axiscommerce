@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Axis.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -136,16 +136,25 @@ Ext.onReady(function(){
 
     var cm = new Ext.grid.ColumnModel([
         expander, {
+            header: 'Id'.l(),
+            dataIndex: 'product_id',
+            menuDisabled: true,
+            width: 60
+        }, {
             header: 'Name'.l(),
             dataIndex: 'name',
             id: 'name',
-            width: 300,
             menuDisabled: true
+        }, {
+            header: 'SKU'.l(),
+            dataIndex: 'sku',
+            menuDisabled: true,
+            width: 130
         }, {
             align: 'right',
             header: 'Price'.l(),
             dataIndex: 'final_price',
-            width: 90,
+            width: 60,
             menuDisabled: true,
             editor: new Ext.form.NumberField({
                 allowBlank: false,
@@ -182,7 +191,7 @@ Ext.onReady(function(){
         }, {
             align: 'right',
             header: 'Subtotal'.l(),
-            width: 100,
+            width: 80,
             dataIndex: 'product_subtotal',
             menuDisabled: true
         }

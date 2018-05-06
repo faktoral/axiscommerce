@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Catalog
  * @subpackage  Axis_Catalog_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -83,7 +83,7 @@ class Axis_Catalog_Admin_ProductOptionValueController extends Axis_Admin_Control
         $_rowset     = Zend_Json::decode($this->_getParam('data'));
         $model       = Axis::model('catalog/product_option_value');
         $modelLabel  = Axis::single('catalog/product_option_value_text');
-        $languageIds = array_keys(Axis_Collect_Language::collect());
+        $languageIds = array_keys(Axis::model('locale/option_language')->toArray());
         
         foreach ($_rowset as $_row) {
             $row = $model->getRow($_row);

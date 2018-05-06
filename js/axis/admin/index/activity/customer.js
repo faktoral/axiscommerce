@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Axis.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -40,7 +40,7 @@ Ext.onReady(function() {
         }, [
             {name: 'id', type: 'int'},
             {name: 'email'},
-            {name: 'created_at', type: 'date', dateFormat: 'Y-m-d'},
+            {name: 'created_at', type: 'date', dateFormat: 'Y-m-d'}
         ]),
         remoteSort: true,
         sortInfo: {
@@ -63,7 +63,7 @@ Ext.onReady(function() {
                     value,
                     Axis.getUrl('account/customer/index/customerId/' + record.get('id'))
                 );
-            },
+            }
         }, {
             header: "Date created".l(),
             dataIndex: 'created_at',

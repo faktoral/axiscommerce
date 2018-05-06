@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Axis.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -78,7 +78,7 @@ Ext.onReady(function() {
             renderer: function(value) {
                 return Ext.util.Format.date(value) + ' ' + Ext.util.Format.date(value, 'H:i:s');
             },
-            dataIndex: 'created_at',
+            dataIndex: 'created_at'
         }]
     });
 

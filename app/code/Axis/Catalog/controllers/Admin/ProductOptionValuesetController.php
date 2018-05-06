@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Catalog
  * @subpackage  Axis_Catalog_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -36,7 +36,7 @@ class Axis_Catalog_Admin_ProductOptionValuesetController extends Axis_Admin_Cont
     public function indexAction()
     {
         $this->view->pageTitle = Axis::translate('catalog')->__('Value Sets');
-        $this->view->languages = Axis_Collect_Language::collect();
+        $this->view->languages = Axis::model('locale/option_language')->toArray();
         $this->render();
     }
 

@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Core
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Core_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -50,10 +50,8 @@ class Axis_Core_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
             `lvl` tinyint(3) unsigned NOT NULL,
             `path` varchar(255) NOT NULL,
             `title` varchar(128) NOT NULL,
-            `config_type` varchar(15) NOT NULL DEFAULT '',
+            `type` varchar(128) NOT NULL DEFAULT '',
             `model` varchar(128) NOT NULL,
-            `model_assigned_with` varchar(128) NOT NULL,
-            `config_options` text,
             `description` text,
             `translation_module` VARCHAR(45) DEFAULT NULL,
             PRIMARY KEY  (`id`),
@@ -192,14 +190,6 @@ class Axis_Core_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
 
         /* Admin tables */
 
-        -- DROP TABLE IF EXISTS `{$installer->getTable('admin_acl_resource')}`;
-        CREATE TABLE IF NOT EXISTS `{$installer->getTable('admin_acl_resource')}` (
-          `id` mediumint(8) unsigned NOT NULL auto_increment,
-          `resource_id` varchar(64) NOT NULL,
-          `title` varchar(64) NOT NULL default '',
-          PRIMARY KEY  (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
-
         -- DROP TABLE IF EXISTS `{$installer->getTable('admin_acl_role')}`;
         CREATE TABLE IF NOT EXISTS `{$installer->getTable('admin_acl_role')}` (
           `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -209,20 +199,7 @@ class Axis_Core_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
         ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
         INSERT INTO `{$installer->getTable('admin_acl_role')}` (`id`, `sort_order`, `role_name`) VALUES
-            (1, 0, 'Administrator'),
-            (2, 0, 'Support'),
-            (3, 0, 'Guest');
-
-        -- DROP TABLE IF EXISTS `{$installer->getTable('admin_acl_role_parent')}`;
-        CREATE TABLE IF NOT EXISTS `{$installer->getTable('admin_acl_role_parent')}` (
-          `role_id` mediumint(8) unsigned NOT NULL,
-          `role_parent_id` mediumint(8) unsigned NOT NULL,
-          PRIMARY KEY  (`role_id`),
-          KEY `fk_role_id` (`role_id`),
-          KEY `fk_role_parent_id` (`role_parent_id`),
-          CONSTRAINT `fk_role_id` FOREIGN KEY (`role_id`) REFERENCES `{$installer->getTable('admin_acl_role')}` (`id`) ON DELETE CASCADE,
-          CONSTRAINT `fk_role_parent_id` FOREIGN KEY (`role_parent_id`) REFERENCES `{$installer->getTable('admin_acl_role')}` (`id`) ON DELETE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
+            (1, 0, 'Administrator');
 
         -- DROP TABLE IF EXISTS `{$installer->getTable('admin_acl_rule')}`;
         CREATE TABLE IF NOT EXISTS `{$installer->getTable('admin_acl_rule')}` (
@@ -236,152 +213,7 @@ class Axis_Core_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
         INSERT INTO `{$installer->getTable('admin_acl_rule')}` (`role_id`, `resource_id`, `permission`) VALUES
-            (1, 'admin', 'allow'),
-            (2, 'admin', 'allow'),
-            (2, 'admin/roles', 'deny'),
-            (2, 'admin/users', 'deny'),
-            (3, 'admin', 'allow'),
-            (3, 'admin/cache/clean', 'deny'),
-            (3, 'admin/cache/clean-all', 'deny'),
-            (3, 'admin/cache/save', 'deny'),
-            (3, 'admin/catalog_category/delete', 'deny'),
-            (3, 'admin/catalog_category/move', 'deny'),
-            (3, 'admin/catalog_category/save', 'deny'),
-            (3, 'admin/catalog_image/save-image', 'deny'),
-            (3, 'admin/catalog_index/batch-save-product', 'deny'),
-            (3, 'admin/catalog_index/move-products', 'deny'),
-            (3, 'admin/catalog_index/remove-product', 'deny'),
-            (3, 'admin/catalog_index/remove-product-from-category', 'deny'),
-            (3, 'admin/catalog_index/remove-product-from-site', 'deny'),
-            (3, 'admin/catalog_index/save-image', 'deny'),
-            (3, 'admin/catalog_index/save-product', 'deny'),
-            (3, 'admin/catalog_index/update-search-index', 'deny'),
-            (3, 'admin/catalog_manufacturer/delete', 'deny'),
-            (3, 'admin/catalog_manufacturer/save', 'deny'),
-            (3, 'admin/catalog_manufacturer/save-image', 'deny'),
-            (3, 'admin/catalog_product-attributes/delete', 'deny'),
-            (3, 'admin/catalog_product-attributes/edit', 'deny'),
-            (3, 'admin/catalog_product-attributes/save', 'deny'),
-            (3, 'admin/catalog_product-option-valueset/delete-sets', 'deny'),
-            (3, 'admin/catalog_product-option-valueset/delete-values', 'deny'),
-            (3, 'admin/catalog_product-option-valueset/save-set', 'deny'),
-            (3, 'admin/catalog_product-option-valueset/save-values', 'deny'),
-            (3, 'admin/cms_block/delete-block', 'deny'),
-            (3, 'admin/cms_block/quick-save-block', 'deny'),
-            (3, 'admin/cms_block/save-block', 'deny'),
-            (3, 'admin/cms_comment/delete-comment', 'deny'),
-            (3, 'admin/cms_comment/quick-save', 'deny'),
-            (3, 'admin/cms_comment/save-comment', 'deny'),
-            (3, 'admin/cms_index/copy-page', 'deny'),
-            (3, 'admin/cms_index/delete-category', 'deny'),
-            (3, 'admin/cms_index/delete-page', 'deny'),
-            (3, 'admin/cms_index/move-category', 'deny'),
-            (3, 'admin/cms_index/quick-save-page', 'deny'),
-            (3, 'admin/cms_index/save-category', 'deny'),
-            (3, 'admin/cms_index/save-page', 'deny'),
-            (3, 'admin/community_rating/delete', 'deny'),
-            (3, 'admin/community_rating/save', 'deny'),
-            (3, 'admin/community_review/delete', 'deny'),
-            (3, 'admin/community_review/save', 'deny'),
-            (3, 'admin/configuration/edit', 'deny'),
-            (3, 'admin/configuration/save', 'deny'),
-            (3, 'admin/configuration/save-field', 'deny'),
-            (3, 'admin/configuration/use-global', 'deny'),
-            (3, 'admin/contacts_index/delete', 'deny'),
-            (3, 'admin/contacts_index/delete-department', 'deny'),
-            (3, 'admin/contacts_index/save-department', 'deny'),
-            (3, 'admin/contacts_index/send', 'deny'),
-            (3, 'admin/contacts_index/set-status', 'deny'),
-            (3, 'admin/csv/delete', 'deny'),
-            (3, 'admin/csv/run', 'deny'),
-            (3, 'admin/csv/save', 'deny'),
-            (3, 'admin/customer_custom-fields/ajax-delete-group', 'deny'),
-            (3, 'admin/customer_custom-fields/ajax-delete-value-set', 'deny'),
-            (3, 'admin/customer_custom-fields/ajax-delete-value-set-values', 'deny'),
-            (3, 'admin/customer_custom-fields/ajax-save-group', 'deny'),
-            (3, 'admin/customer_custom-fields/ajax-save-value-set', 'deny'),
-            (3, 'admin/customer_custom-fields/ajax-save-value-set-values', 'deny'),
-            (3, 'admin/customer_custom-fields/batch-save-fields', 'deny'),
-            (3, 'admin/customer_custom-fields/delete-fields', 'deny'),
-            (3, 'admin/customer_custom-fields/save-field', 'deny'),
-            (3, 'admin/customer_email/send', 'deny'),
-            (3, 'admin/customer_group/delete', 'deny'),
-            (3, 'admin/customer_group/save', 'deny'),
-            (3, 'admin/customer_index/create', 'deny'),
-            (3, 'admin/customer_index/delete', 'deny'),
-            (3, 'admin/customer_index/quick-save', 'deny'),
-            (3, 'admin/customer_index/save', 'deny'),
-            (3, 'admin/customer_index/save-all', 'deny'),
-            (3, 'admin/discount_index/create', 'deny'),
-            (3, 'admin/discount_index/delete', 'deny'),
-            (3, 'admin/discount_index/save', 'deny'),
-            (3, 'admin/gbase_index/delete', 'deny'),
-            (3, 'admin/gbase_index/export', 'deny'),
-            (3, 'admin/gbase_index/export-branch', 'deny'),
-            (3, 'admin/gbase_index/revoke-token', 'deny'),
-            (3, 'admin/gbase_index/set-status', 'deny'),
-            (3, 'admin/gbase_index/update', 'deny'),
-            (3, 'admin/import_index/connect', 'deny'),
-            (3, 'admin/import_index/delete', 'deny'),
-            (3, 'admin/import_index/save', 'deny'),
-            (3, 'admin/index', 'allow'),
-            (3, 'admin/locale_currency/batch-save', 'deny'),
-            (3, 'admin/locale_currency/delete', 'deny'),
-            (3, 'admin/locale_currency/save', 'deny'),
-            (3, 'admin/locale_language/delete', 'deny'),
-            (3, 'admin/locale_language/save', 'deny'),
-            (3, 'admin/location_country/delete', 'deny'),
-            (3, 'admin/location_country/save', 'deny'),
-            (3, 'admin/location_zone-definition/delete-assigns', 'deny'),
-            (3, 'admin/location_zone-definition/delete', 'deny'),
-            (3, 'admin/location_zone-definition/save-assign', 'deny'),
-            (3, 'admin/location_zone-definition/save', 'deny'),
-            (3, 'admin/location_zone/delete', 'deny'),
-            (3, 'admin/location_zone/save', 'deny'),
-            (3, 'admin/module/install', 'deny'),
-            (3, 'admin/module/uninstall', 'deny'),
-            (3, 'admin/module/upgrade', 'deny'),
-            (3, 'admin/pages/delete', 'deny'),
-            (3, 'admin/pages/save', 'deny'),
-            (3, 'admin/poll_index/clear', 'deny'),
-            (3, 'admin/poll_index/delete', 'deny'),
-            (3, 'admin/poll_index/quick-save', 'deny'),
-            (3, 'admin/poll_index/save', 'deny'),
-            (3, 'admin/roles', 'deny'),
-            (3, 'admin/roles/add', 'deny'),
-            (3, 'admin/roles/delete', 'deny'),
-            (3, 'admin/roles/save', 'deny'),
-            (3, 'admin/sales_order-status/batch-save', 'deny'),
-            (3, 'admin/sales_order-status/delete', 'deny'),
-            (3, 'admin/sales_order-status/save', 'deny'),
-            (3, 'admin/sales_order/delete', 'deny'),
-            (3, 'admin/sales_order/set-status', 'deny'),
-            (3, 'admin/search/delete', 'deny'),
-            (3, 'admin/site/delete', 'deny'),
-            (3, 'admin/site/save', 'deny'),
-            (3, 'admin/sitemap_index/quick-save', 'deny'),
-            (3, 'admin/sitemap_index/remove', 'deny'),
-            (3, 'admin/sitemap_index/save', 'deny'),
-            (3, 'admin/tag_index/delete', 'deny'),
-            (3, 'admin/tag_index/save', 'deny'),
-            (3, 'admin/tax_class/delete', 'deny'),
-            (3, 'admin/tax_class/save', 'deny'),
-            (3, 'admin/tax_rate/delete', 'deny'),
-            (3, 'admin/tax_rate/save', 'deny'),
-            (3, 'admin/template_box/batch-save', 'deny'),
-            (3, 'admin/template_box/delete', 'deny'),
-            (3, 'admin/template_box/save', 'deny'),
-            (3, 'admin/template_index/delete', 'deny'),
-            (3, 'admin/template_index/export', 'deny'),
-            (3, 'admin/template_index/import', 'deny'),
-            (3, 'admin/template_index/save', 'deny'),
-            (3, 'admin/template_layout/delete', 'deny'),
-            (3, 'admin/template_layout/save', 'deny'),
-            (3, 'admin/template_mail/delete', 'deny'),
-            (3, 'admin/template_mail/save', 'deny'),
-            (3, 'admin/users', 'deny'),
-            (3, 'admin/users/delete', 'deny'),
-            (3, 'admin/users/save', 'deny');
+            (1, 'admin', 'allow');
 
         -- DROP TABLE IF EXISTS `{$installer->getTable('admin_menu')}`;
         CREATE TABLE IF NOT EXISTS `{$installer->getTable('admin_menu')}` (
@@ -430,84 +262,172 @@ class Axis_Core_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
         ");
-
-        Axis::single('core/config_field')
-            ->add('core', 'Core', null, null, array('translation_module' => 'Axis_Core'))
-
-            ->add('core/store/name', 'Core/Store/Name', 'Enter store name')
-            ->add('core/store/city', 'City', '')
-            ->add('core/store/country', 'Country', 223, 'select', 'Store Country', array('model' => 'Country'))
-            ->add('core/store/zone', 'Zone', 43, 'select', 'Store zone(state,province)', array('model' => 'ZoneByCountry', 'model_assigned_with' => 'core/store/country'))
-            ->add('core/store/zip', 'Zip code', '10001', 'string', 'Zip code')
-            ->add('core/store/owner', 'Store owner', 'Owner')
-
-            ->add('core/backend/route', 'Core/Backend/Route', 'admin', 'string', 'Admin url (example.com/<b>adminRoute</b>)')
-            ->add('core/backend/ssl', 'Ssl Enabled', 0, 'bool')
-
-            ->add('core/frontend/ssl', 'Core/Frontend/Ssl Enabled', 0, 'bool')
-
-            ->add('core/company/name', 'Core/Company/Name', 'Axiscommerce', 'string', 'Company name')
-            ->add('core/company/site', 'Website', 'www.example.com', 'string', 'Company website')
-            ->add('core/company/country', 'Country',  '223', 'select', 'Company country', array('model' => 'Country'))
-            ->add('core/company/city', 'City', 'New York')
-            ->add('core/company/zone', 'Zone', '43', 'select', array('model' => 'ZoneByCountry', 'model_assigned_with' => 'core/company/country'))
-            ->add('core/company/street', 'Street', 'Enter this your street')
-            ->add('core/company/zip', 'Zip code', '10001')
-            ->add('core/company/phone', 'Phone', '')
-            ->add('core/company/fax', 'Fax', '')
-            ->add('core/company/administratorEmail', 'Administrator email',  'email1', 'select', array('model' => 'MailBoxes'))
-            ->add('core/company/customerRelationEmail', 'Customer relations email',  'email3', 'select', array('model' => 'MailBoxes'))
-            ->add('core/company/salesDepartmentEmail', 'Sales department email',  'email4', 'select', array('model' => 'MailBoxes'))
-            ->add('core/company/supportEmail', 'Support email', 'email5', 'select', array('model' => 'MailBoxes'))
-
-            ->add('core/cache/default_lifetime', 'core/Cache/Default Lifetime', '86400')
-            ->add('core/translation/autodetect', 'core/Translation/Autodetect new words',  '0', 'bool', 'Detect not translated words and write them to the file (Make sure that locale folder has writable permissions: >chmod -R 0777 [root_path]/app/locale)')
-
-            ->add('core/minify/js_front', 'Core/Minify/Enable javascript merging the frontend', '0', 'bool')
-            ->add('core/minify/js_admin', 'Core/Minify/Enable javascript merging on the backend', '0', 'bool')
-            ->add('core/minify/css_front', 'Enable css merging on the frontend', '0', 'bool')
-            ->add('core/minify/css_admin', 'Enable css merging on the backend', '0', 'bool')
-
-            ->add('mail', 'Mail', null, null, array('translation_module' => 'Axis_Core'))
-            ->add('mail/main/mtcFrom', 'Mail/General/Sender', 'email2', 'select', array('model' => 'MailBoxes'))
-            ->add('mail/main/transport', 'Mail transport', 'sendmail', 'select', 'Mail Transport (smtp or sendmail)', array('config_options' => 'smtp,sendmail'))
-            ->add('mail/smtp/host', 'Mail/Smtp/Host', 'host.smtp.com')
-            ->add('mail/smtp/user', 'User', 'test+axiscommerce.com', 'handler', '', array('model' => 'Crypt'))
-            ->add('mail/smtp/password', 'Password', 'test', 'handler', '', array('model' => 'Crypt'))
-            ->add('mail/smtp/port', 'Port', '465')
-            ->add('mail/smtp/auth', 'Use Auth', '1', 'bool')
-            ->add('mail/smtp/secure', 'Secure', 'ssl', 'select', array('config_options' => 'none,tls,ssl'))
-            ->add('mail/mailboxes/email1', 'Mail/Mailboxes/Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email2', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email3', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email4', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email5', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email6', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email7', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email8', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email9', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email10', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email11', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email12', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email13', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email14', 'Email', 'test@axiscommerce.com')
-            ->add('mail/mailboxes/email15', 'Email', 'test@axiscommerce.com')
-
-            ->add('design', 'Design', null, null, array('translation_module' => 'Axis_Core'))
-            ->add('design/main/frontTemplateId', 'Design/General/Front Template', 2, 'select', array('model' => 'Template'))
-            ->add('design/main/adminTemplateId', 'Admin Template',  1, 'select', array('model' => 'Template'))
-            ->add('design/htmlHead/defaultTitle', 'Design/HTML Head/Default Title', 'Default Title')
-            ->add('design/htmlHead/defaultDescription', 'Default Description', 'Default Description',  'text')
-            ->add('design/htmlHead/defaultKeywords', 'Default Keywords',  'Axis, store', 'text')
-            ->add('design/htmlHead/titlePrefix', 'Title Prefix')
-            ->add('design/htmlHead/titleSuffix', 'Title Suffix')
-            ->add('design/htmlHead/titleDivider', 'Title Divider', ' - ')
-            ->add('design/htmlHead/titlePattern', 'Title Pattern', 'Page Title,Site Name', 'multiple', 'Check values, which you want to see on page title', array('config_options' => 'Page Title,Parent Page Titles,Site Name'))
-            ->add('design/htmlHead/defaultRobots', 'Default Robots', 'INDEX FOLLOW', 'select', array('config_options' => 'INDEX FOLLOW,INDEX NOFOLLOW,NOINDEX FOLLOW,NOINDEX NOFOLLOW'))
-            ->add('design/htmlHead/homeDescription', 'Homepage description', '', 'text', 'Homepage description')
-            ->add('design/htmlHead/homeKeywords', 'Homepage keywords', 'Axis, store', 'text')
-            ->add('design/htmlHead/homeTitle', 'Homepage title', 'Homepage title', 'string', 'Homepage title')
-            ;
+          
+        $this->getConfigBuilder()
+            ->section('core', 'Core')
+            ->setTranslation('Axis_Core')
+                ->section('store', 'Store')
+                    ->option('name', 'Name', 'Enter store name')
+                    ->option('city', 'City')
+                    ->option('country', 'Country', 223)
+                        ->setType('select')
+                        ->setDescription('Store Country')
+                        ->setModel('location/option_country')
+                    ->option('zone', 'Zone', 43)
+                        ->setType('select')
+                        ->setDescription('Store zone(state,province)')
+                        ->setModel('core/option_store_zone')
+                    ->option('zip', 'Zip code', '10001')
+                        ->setDescription('Zip code')
+                    ->option('owner', 'Store owner', 'Owner')
+                ->section('/store')
+                ->section('backend', 'Backend')
+                    ->option('route', 'Route', 'admin')
+                        ->setDescription('Admin url (example.com/<b>adminRoute</b>)')
+                    ->option('ssl', 'Ssl Enabled', false)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                ->section('/backend')
+                ->section('frontend', 'Frontend')
+                    ->option('ssl', 'Ssl Enabled', false)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                ->section('/frontend')
+                ->section('company', 'Company')
+                    ->option('name', 'Name', 'Axiscommerce')
+                        ->setDescription('Company name')
+                    ->option('site', 'Website', 'www.example.com')
+                        ->setDescription('Company website')
+                    ->option('country', 'Country', 223)
+                        ->setType('select')
+                        ->setDescription('Company country')
+                        ->setModel('location/option_country')
+                    ->option('city', 'City', 'New York')
+                    ->option('zone', 'Zone', 43)
+                        ->setType('select')
+                        ->setModel('core/option_company_zone')
+                    ->option('street', 'Street', 'Enter this your street')
+                    ->option('zip', 'Zip code', '10001')
+                    ->option('phone', 'Phone')
+                    ->option('fax', 'Fax')
+                    ->option('administratorEmail', 'Administrator email', 'email1')
+                        ->setType('select')
+                        ->setModel('core/option_mail_boxes')
+                    ->option('customerRelationEmail', 'Customer relations email', 'email3')
+                        ->setType('select')
+                        ->setModel('core/option_mail_boxes')
+                    ->option('salesDepartmentEmail', 'Sales department email', 'email4')
+                        ->setType('select')
+                        ->setModel('core/option_mail_boxes')
+                    ->option('supportEmail', 'Support email', 'email5')
+                        ->setType('select')
+                        ->setModel('core/option_mail_boxes')
+                ->section('/company')
+                ->section('cache', 'Cache')
+                    ->option('default_lifetime', 'Default Lifetime', '86400')
+                ->section('/cache')
+                ->section('translation', 'Translation')
+                    ->option('autodetect', 'Autodetect new words', false)
+                        ->setType('radio')
+                        ->setDescription('Detect not translated words and write them to the file (Make sure that locale folder has writable permissions: >chmod -R 0777 [root_path]/app/locale)')
+                        ->setModel('core/option_boolean')
+                ->section('/translation')
+                ->section('minify', 'Minify')
+                    ->option('js_front', 'Enable javascript merging the frontend', false)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                    ->option('js_admin', 'Enable javascript merging on the backend', false)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                    ->option('css_front', 'Enable css merging on the frontend', false)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                    ->option('css_admin', 'Enable css merging on the backend', false)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                ->section('/minify')
+            ->section('/core')
+            ->section('mail', 'Mail')
+                ->setTranslation('Axis_Core')
+                ->section('main', 'General')
+                    ->option('mtcFrom', 'Sender', 'email2')
+                        ->setType('select')
+                        ->setModel('core/option_mail_boxes')
+                    ->option('transport', 'Mail transport')
+                        ->setValue(Axis_Core_Model_Option_Mail_Transport::SENDMAIL)
+                        ->setType('select')
+                        ->setDescription('Mail Transport (smtp or sendmail)')
+                        ->setModel('core/option_mail_transport')
+                ->section('/main')
+                ->section('smtp', 'Smtp')
+                    ->option('host', 'Host', 'host.smtp.com')
+                    ->option('user', 'User', 'test+axiscommerce.com')
+                        ->setModel('core/option_crypt')
+                    ->option('password', 'Password', 'test')
+                        ->setModel('core/option_crypt')
+                    ->option('port', 'Port', '465')
+                    ->option('auth', 'Use Auth', true)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                    ->option('secure', 'Secure')
+                        ->setValue(Axis_Core_Model_Option_Mail_Secure::SSL)
+                        ->setType('select')
+                        ->setModel('core/option_mail_secure')
+                ->section('/smtp')
+                ->section('mailboxes', 'Mailboxes')
+                    ->option('email1', 'Email', 'test@axiscommerce.com')
+                    ->option('email2', 'Email', 'test@axiscommerce.com')
+                    ->option('email3', 'Email', 'test@axiscommerce.com')
+                    ->option('email4', 'Email', 'test@axiscommerce.com')
+                    ->option('email5', 'Email', 'test@axiscommerce.com')
+                    ->option('email6', 'Email', 'test@axiscommerce.com')
+                    ->option('email7', 'Email', 'test@axiscommerce.com')
+                    ->option('email8', 'Email', 'test@axiscommerce.com')
+                    ->option('email9', 'Email', 'test@axiscommerce.com')
+                    ->option('email10', 'Email', 'test@axiscommerce.com')
+                    ->option('email11', 'Email', 'test@axiscommerce.com')
+                    ->option('email12', 'Email', 'test@axiscommerce.com')
+                    ->option('email13', 'Email', 'test@axiscommerce.com')
+                    ->option('email14', 'Email', 'test@axiscommerce.com')
+                    ->option('email15', 'Email', 'test@axiscommerce.com')
+                ->section('/mailboxes')
+            ->section('/mail')
+            ->section('design', 'Design')
+                ->setTranslation('Axis_Core')
+                ->section('main', 'General')
+                    ->option('frontTemplateId', 'Front Template', 2)
+                        ->setType('select')
+                        ->setModel('core/option_template')
+                    ->option('adminTemplateId', 'Admin Template', 1)
+                        ->setType('select')
+                        ->setModel('core/option_template')
+                ->section('/main')
+                ->section('htmlHead', 'HTML Head')
+                    ->option('defaultTitle', 'Default Title', 'Default Title')
+                    ->option('defaultDescription', 'Default Description', 'Default Description')
+                        ->setType('textarea')
+                    ->option('defaultKeywords', 'Default Keywords', 'Axis, store')
+                        ->setType('textarea')
+                    ->option('titlePrefix', 'Title Prefix')
+                    ->option('titleSuffix', 'Title Suffix')
+                    ->option('titleDivider', 'Title Divider', ' - ')
+                    ->option('titlePattern', 'Title Pattern')
+                        ->setValue(Axis_Core_Model_Option_Template_TitlePattern::getDeafult())
+                        ->setType('multiple')
+                        ->setDescription('Check values, which you want to see on page title')
+                        ->setModel('core/option_template_titlePattern')
+                    ->option('defaultRobots', 'Default Robots', 'INDEX FOLLOW')
+                        ->setValue(Axis_Core_Model_Option_Template_Robots::getDeafult())
+                        ->setType('select')
+                        ->setModel('core/option_template_robots')
+                    ->option('homeDescription', 'Homepage description')
+                        ->setType('textarea')
+                        ->setDescription('Homepage description')
+                    ->option('homeKeywords', 'Homepage keywords', 'Axis, store')
+                        ->setType('textarea')
+                    ->option('homeTitle', 'Homepage title', 'Homepage title')
+                        ->setDescription('Homepage title')
+            ->section('/');
 
         Axis::single('core/cache')
             ->add('modules', 1, 864000) //10 days
@@ -520,10 +440,5 @@ class Axis_Core_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
             ->add('core/index/index')
             ->add('core/error/*')
             ->add('core/error/not-found');
-    }
-
-    public function down()
-    {
-
     }
 }

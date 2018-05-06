@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Sitemap
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,21 +30,15 @@ class Axis_Sitemap_Upgrade_0_1_2 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        Axis::single('admin/acl_resource')
+        Axis::single('admin/acl_rule')
             ->rename('admin/sitemap_index/index',  'admin/sitemap/index')
             ->rename('admin/sitemap_index/list',   'admin/sitemap/list')
             ->rename('admin/sitemap_index/save',   'admin/sitemap/batch-save')
             ->rename('admin/sitemap_index/remove', 'admin/sitemap/remove')
             ->rename('admin/sitemap_index/ping',   'admin/sitemap/ping')
-            ->remove('admin/sitemap_index')
-            ->add('admin/sitemap/file', 'Sitemap Files')
+            
             ->rename('admin/sitemap_file/remove', 'admin/sitemap/file/create')
             ->rename('admin/sitemap_file/ping',   'admin/sitemap/file/list')
-            ->remove('admin/sitemap_file')
             ;
-    }
-
-    public function down()
-    {
     }
 }

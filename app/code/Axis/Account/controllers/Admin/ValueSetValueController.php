@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Account
  * @subpackage  Axis_Account_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -48,7 +48,7 @@ class Axis_Account_Admin_ValueSetValueController extends Axis_Admin_Controller_B
         $dataset     = Zend_Json::decode($this->_getParam('data'));
         $model       = Axis::model('account/customer_valueSet_value');
         $modelLabel  = Axis::model('account/customer_valueSet_value_label');
-        $languageIds = array_keys(Axis_Collect_Language::collect());
+        $languageIds = array_keys(Axis::model('locale/option_language')->toArray());
         foreach ($dataset as $data) {
             $row = $model->getRow($data);
             $row->save();

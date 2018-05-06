@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_GoogleBase
  * @subpackage  Axis_GoogleBase_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -38,14 +38,15 @@ class Axis_GoogleBase_Model_Observer
         $box->addItem(array(
             'marketing' => array(
                 'pages' => array(
-                    'googlebase' => array(
+                    'google-base' => array(
                         'label'         => 'Google Base',
                         'order'         => 20,
                         'translator'    => 'Axis_GoogleBase',
                         'module'        => 'Axis_GoogleBase',
                         'controller'    => 'index',
                         'action'        => 'index',
-                        'route'         => 'admin/googlebase'
+                        'route'         => 'admin/axis/google-base',
+                        'resource'      => 'admin/axis/google-base/index/index'
                     )
                 )
             )

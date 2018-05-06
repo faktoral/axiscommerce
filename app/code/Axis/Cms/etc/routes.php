@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Cms
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -58,11 +58,11 @@ $router->addRoute('cms', new Axis_Controller_Router_Route_Front(
     )
 ));
 
-$router->addRoute('admin/cms', new Axis_Controller_Router_Route_Back(
+$router->addRoute('admin/axis/cms', new Axis_Controller_Router_Route_Back(
     'cms/:controller/:action/*',
     array(
         'module'     => 'Axis_Cms',
         'controller' => 'index',
         'action'     => 'index'
     )
-), 'admin');
+), 'admin/axis/admin');

@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Account
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Account_Upgrade_0_1_9 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -39,12 +39,12 @@ class Axis_Account_Upgrade_0_1_9 extends Axis_Core_Model_Migration_Abstract
 
         ");
 
-        Axis_Core_Model_Cache::getCache()->clean();
+        Axis::cache()->clean();
     }
 
     public function down()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 

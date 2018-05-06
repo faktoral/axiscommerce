@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Core
  * @subpackage  Axis_Core_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -31,32 +31,91 @@
  * @subpackage  Axis_Core_Model
  * @author      Axis Core Team <core@axiscommerce.com>
  */
-abstract class Axis_Core_Model_Migration_Abstract
+abstract class Axis_Core_Model_Migration_Abstract implements Axis_Core_Model_Migration_Interface
 {
     /**
+     *
      * @var Axis_Install_Model_Installer
      */
-    protected $_installer;
+    protected $_installer = null;
+
+    /**
+     *
+     * @var Axis_Core_Model_Config_Builder
+     */
+    protected $_configBuilder = null;
+
+    /**
+     *
+     * @var string
+     */
     protected $_info = '';
+
+    /**
+     *
+     * @var string
+     */
     protected $_version;
 
-    public function  __construct()
-    {
-        $this->_installer = Axis::single('install/installer');
-    }
-
+    /**
+     *
+     * @return string
+     */
     public function getVersion()
     {
         return $this->_version;
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getInfo()
     {
         return $this->_info;
     }
 
-    abstract public function up();
+    /**
+     *
+     * @return Axis_Install_Model_Installer
+     */
+    public function getInstaller()
+    {
+        if (null === $this->_installer) {
+            $this->_installer = Axis::single('install/installer');
+        }
 
-    abstract public function down();
+        return $this->_installer;
+    }
 
+    /**
+     *
+     * @return Axis_Core_Model_Config_Builder
+     */
+    public function getConfigBuilder()
+    {
+        if (null === $this->_configBuilder) {
+            $this->_configBuilder = Axis::single('core/config_builder');
+        }
+
+        return $this->_configBuilder->flushDefaults();
+    }
+
+    /**
+     *
+     * @return void
+     */
+    public function up()
+    {
+
+    }
+
+    /**
+     *
+     * @return void
+     */
+    public function down()
+    {
+
+    }
 }

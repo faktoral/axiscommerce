@@ -2,7 +2,7 @@
 /**
  * Axis
  *
- * @copyright Copyright 2008-2011 Axis
+ * @copyright Copyright 2008-2012 Axis
  * @license GNU Public License V3.0
  *
  * This file is part of Axis.
@@ -23,7 +23,7 @@
  * @category    Axis
  * @package     Axis_Catalog
  * @subpackage  Axis_Catalog_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -250,7 +250,8 @@ class Axis_Catalog_Model_Observer
                         'module'        => 'Axis_Catalog',
                         'controller'    => 'product',
                         'action'        => 'index',
-                        'route'         => 'admin/catalog'
+                        'route'         => 'admin/axis/catalog',
+                        'resource'      => 'admin/axis/catalog/product/index'
                     ),
                     'catalog/product-attributes' => array(
                         'label'         => 'Product Attributes',
@@ -263,7 +264,8 @@ class Axis_Catalog_Model_Observer
                                 'module'        => 'Axis_Catalog',
                                 'controller'    => 'product-option',
                                 'action'        => 'index',
-                                'route'         => 'admin/catalog'
+                                'route'         => 'admin/axis/catalog',
+                                'resource'      => 'admin/axis/catalog/product-option/index'
                             ),
                             'catalog/product-option-valueset' => array(
                                 'label'         => 'Value Sets',
@@ -271,7 +273,8 @@ class Axis_Catalog_Model_Observer
                                 'module'        => 'Axis_Catalog',
                                 'controller'    => 'product-option-valueset',
                                 'action'        => 'index',
-                                'route'         => 'admin/catalog'
+                                'route'         => 'admin/axis/catalog',
+                                'resource'      => 'admin/axis/catalog/product-option-valueset/index'
                             ),
                         )
                     ),
@@ -281,7 +284,8 @@ class Axis_Catalog_Model_Observer
                         'module'        => 'Axis_Catalog',
                         'controller'    => 'manufacturer',
                         'action'        => 'index',
-                        'route'         => 'admin/catalog'
+                        'route'         => 'admin/axis/catalog',
+                        'resource'      => 'admin/axis/catalog/manufacturer/index'
                     )
                 )
             )

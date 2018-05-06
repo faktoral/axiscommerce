@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Poll
  * @subpackage  Axis_Poll_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -42,7 +42,8 @@ class Axis_Poll_Model_Observer
                         'order'         => 40,
                         'translator'    => 'Axis_Poll',
                         'module'        => 'Axis_Poll',
-                        'route'         => 'admin/poll'
+                        'route'         => 'admin/axis/poll',
+                        'resource'      => 'admin/axis/poll'
                     )
                 )
             )

@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Community
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Community_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        Axis::single('admin/acl_resource')
+        Axis::single('admin/acl_rule')
             ->rename('admin/community_rating',          'admin/community/rating')
             ->rename('admin/community_rating/index',    'admin/community/rating/index')
             ->rename('admin/community_rating/get-list', 'admin/community/rating/list')
@@ -44,11 +44,6 @@ class Axis_Community_Upgrade_0_1_1 extends Axis_Core_Model_Migration_Abstract
             ->rename('admin/community_review/delete',            'admin/community/review/remove')
             ->rename('admin/community_review/get-product-list',  'admin/community/review/get-product-list')
             ->rename('admin/community_review/get-customer-list', 'admin/community/review/get-customer-list')
-            ->remove('admin/community_')
         ;
-    }
-
-    public function down()
-    {
     }
 }

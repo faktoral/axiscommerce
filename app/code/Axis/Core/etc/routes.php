@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Core
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -32,14 +32,14 @@ $router->addRoute('core', new Axis_Controller_Router_Route_Front(
     )
 ));
 
-$router->addRoute('admin/core', new Axis_Controller_Router_Route_Back(
+$router->addRoute('admin/axis/core', new Axis_Controller_Router_Route_Back(
     'core/:controller/:action/*',
     array(
         'module'     => 'Axis_Core',
         'controller' => 'index',
         'action'     => 'index'
     )
-), 'admin');
+), 'admin/axis/admin');
 
 $router->addRoute('sandbox', new Axis_Controller_Router_Route_Front(
     'sandbox',

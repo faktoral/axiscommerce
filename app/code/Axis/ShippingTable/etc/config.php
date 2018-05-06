@@ -19,14 +19,23 @@
  * 
  * @category    Axis
  * @package     Axis_ShippingTable
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 $config = array(
     'Axis_ShippingTable' => array(
-        'package' => 'Axis_Shipping',
-        'name' => 'Table',
-        'version' => '0.1.2',
-        'required' => 0
+        'package'  => 'Axis_Shipping',
+        'name'     => 'Table',
+        'version'  => '0.1.2',
+        'required' => 0,
+        'events'   => array(
+            'admin_box_navigation_prepare' => array(
+                'prepare_menu' => array(
+                    'type'   => 'model',
+                    'model'  => 'shippingTable/observer',
+                    'method' => 'prepareAdminNavigationBox'
+                )
+            )
+        )
     )
 );

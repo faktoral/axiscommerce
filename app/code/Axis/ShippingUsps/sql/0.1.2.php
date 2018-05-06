@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_ShippingUsps
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,13 +30,14 @@ class Axis_ShippingUsps_Upgrade_0_1_2 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $this->getConfigBuilder()
+            ->section('shipping')
+                ->section('Usps_Standard')
+                    ->option('showErrors', 'Display messages from service provider', true)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                        ->setTranslation('Axis_Admin')
 
-        Axis::single('core/config_field')
-            ->add('shipping/Usps_Standard/showErrors', 'Display messages from service provider', 1, 'bool', array('translation_module' => 'Axis_Admin'));
-    }
-
-    public function down()
-    {
+            ->section('/');
     }
 }

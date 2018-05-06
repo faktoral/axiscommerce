@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Image
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -178,36 +178,65 @@ class Axis_Image
         }
 
         switch($verticalAlign) {
-            case 'middle':
+            case Axis_Catalog_Model_Option_Watermark_Position::MIDDLE:
                 $positionY = $this->_imageSrcHeight / 2 - $watermarkSrcHeight / 2;
                 break;
-            case 'bottom':
+            case Axis_Catalog_Model_Option_Watermark_Position::BOTTOM:
                 $positionY = $this->_imageSrcHeight - $watermarkSrcHeight;
                 break;
-            case 'top':
+            case Axis_Catalog_Model_Option_Watermark_Position::TOP:
             default:
                 $positionY = 0;
                 break;
         }
 
         switch($horizontalAlign) {
-            case 'center':
+            case Axis_Catalog_Model_Option_Watermark_Position::CENTER:
                 $positionX = $this->_imageSrcWidth / 2 - $watermarkSrcWidth / 2;
                 break;
-            case 'right':
+            case Axis_Catalog_Model_Option_Watermark_Position::RIGHT:
                 $positionX = $this->_imageSrcWidth - $watermarkSrcWidth;
                 break;
-            case 'left':
+            case Axis_Catalog_Model_Option_Watermark_Position::LEFT:
             default:
                 $positionX = 0;
                 break;
         }
 
-        if ($position == 'stretch') {
-            //@todo stretch, opacity and repeat;
+        if (Axis_Catalog_Model_Option_Watermark_Position::STRETCH === $position) {
+            $dstX = $dstY = 0;
+            $newWidth       = $this->_imageSrcWidth;
+            $newHeight      = $this->_imageSrcHeight;
+            $imageRatio     = $this->_imageSrcHeight / $this->_imageSrcWidth;
+            $watermarkRatio = $watermarkSrcHeight / $watermarkSrcWidth;
+
+            if ($imageRatio > $watermarkRatio) {
+                $newHeight = round($this->_imageSrcWidth * ($watermarkSrcHeight / $watermarkSrcWidth));
+                $dstY      = ($this->_imageSrcHeight - $newHeight) / 2;
+            } elseif ($imageRatio < $watermarkRatio) {
+                $newWidth = round($this->_imageSrcHeight * ($watermarkSrcWidth / $watermarkSrcHeight));
+                $dstX     = ($this->_imageSrcWidth - $newWidth) / 2;
+            }
+
+            imagecopyresampled(
+                $this->_imageResource,
+                $watermark,
+                $dstX, $dstY, 0, 0,
+                $newWidth,
+                $newHeight,
+                $watermarkSrcWidth,
+                $watermarkSrcHeight
+            );
+        } else {
+            imagecopy(
+                $this->_imageResource,
+                $watermark,
+                $positionX, $positionY, 0, 0,
+                $watermarkSrcWidth,
+                $watermarkSrcHeight
+            );
         }
 
-        imagecopy($this->_imageResource, $watermark, $positionX, $positionY, 0, 0, $watermarkSrcWidth, $watermarkSrcHeight);
         imagedestroy($watermark);
     }
 

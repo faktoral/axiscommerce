@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Admin
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -27,24 +27,4 @@ class Axis_Admin_Upgrade_0_1_2 extends Axis_Core_Model_Migration_Abstract
 {
     protected $_version = '0.1.2';
     protected $_info = 'Index for acl resource_id was added';
-
-    public function up()
-    {
-        $installer = Axis::single('install/installer');
-
-        $installer->run("
-            ALTER TABLE `{$installer->getTable('admin_acl_resource')}`
-                ADD INDEX `IDX_RESOURCE_ID` USING BTREE(`resource_id`);
-        ");
-    }
-
-    public function down()
-    {
-        $installer = Axis::single('install/installer');
-
-        $installer->run("
-            ALTER TABLE `{$installer->getTable('admin_acl_resource')}`
-                DROP INDEX `IDX_RESOURCE_ID`;
-        ");
-    }
 }

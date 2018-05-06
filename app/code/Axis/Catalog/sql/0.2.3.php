@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Catalog
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Catalog_Upgrade_0_2_3 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -342,119 +342,123 @@ class Axis_Catalog_Upgrade_0_2_3 extends Axis_Core_Model_Migration_Abstract
 
         ");
 
-        $languages = Axis_Collect_Language::collect();
-        $mCategoryDescription = Axis::model('catalog/category_description');
-        foreach ($languages as $langId => $langName) {
-            $mCategoryDescription->createRow(array(
+        $languages = Axis::model('locale/option_language');
+        $modelCatalogCategoryDescription = Axis::model('catalog/category_description');
+        foreach ($languages as $languageId => $languageName) {
+            $modelCatalogCategoryDescription->createRow(array(
                 'category_id'   => 1,
-                'language_id'   => $langId,
+                'language_id'   => $languageId,
                 'name'          => 'Main Store',
                 'description'   => 'Root Category'
             ))->save();
         }
 
-        Axis::single('core/config_field')
-            ->add('catalog', 'Catalog', null, null, array('translation_module' => 'Axis_Catalog'))
+        $this->getConfigBuilder()
+            ->section('catalog', 'Catalog')
+                ->setTranslation('Axis_Catalog')
+                ->section('main', 'General')
+                    ->option('route', 'Catalog route', 'store')
+                        ->setDescription('Catalog url (example.com/<b>route</b>/product)')
+                ->section('/main')
 
-            ->add('catalog/main/route', 'Catalog/General/Catalog route', 'store', 'string', 'Catalog url (example.com/<b>route</b>/product)')
+                ->section('listing', 'Product Listing')
+                    ->option('type', 'Type')
+                        ->setValue(Axis_Catalog_Model_Option_Product_Listing_Type::getDeafult())
+                        ->setType('select')
+                        ->setDescription('Default listing type')
+                        ->setModel('catalog/option_product_listing_type')
+                    ->option('perPage', 'Show per page', '6,9,18,32')
+                    ->option('perPageDefault', 'Default product count per page', 9)
+                    ->option('sortBy', 'Sort By', 'Name,Price')
+                ->section('/listing')
 
-            ->add('catalog/listing/type', 'Catalog/Product Listing/Type', 'grid', 'select', 'Default listing type', array('config_options' => 'grid,list'))
-            ->add('catalog/listing/perPage', 'Show per page', '6,9,18,32')
-            ->add('catalog/listing/perPageDefault', 'Default product count per page', 9)
-            ->add('catalog/listing/sortBy', 'Sort By', 'Name,Price')
+                ->section('product', 'Product View')
+                    ->option('hurldelimiter', 'Hurl world delimiter', '-')
+                    ->option('seodelimiter', 'Hurl world delimiter', '_')
+                    ->option('seodesclength', 'SEO Description Length (45 -150 chars)', 100)
+                ->section('/product')
 
-            ->add('catalog/product/hurldelimiter', 'Catalog/Product View/Hurl world delimiter', '-')
-            ->add('catalog/product/seodelimiter', 'Hurl world delimiter', '_')
-            ->add('catalog/product/seodesclength', 'SEO Description Length (45 -150 chars)', 100)
+                ->section('lightzoom', 'Lightzoom')
+                    ->option('zoomStageWidth', 'Zoomer width', 250)
+                    ->option('zoomStageHeight', 'Zoomer height', 250)
+                    ->option('zoomStagePosition', 'Zoomer position')
+                        ->setValue(Axis_Catalog_Model_Option_Lightzoom_StagePosition::getDeafult())
+                        ->setType('select')
+                        ->setModel('catalog/option_lightzoom_stagePosition')
+                    ->option('zoomStageOffsetX', 'Zoomer offset-x', 10)
+                    ->option('zoomStageOffsetY', 'Zoomer offset-y', 0)
+                    ->option('zoomLensOpacity', 'Lens opacity', 0.7)
+                    ->option('zoomCursor', 'Lens cursor')
+                        ->setValue(Axis_Catalog_Model_Option_Lightzoom_Cursor::getDeafult())
+                        ->setType('select')
+                        ->setModel('catalog/option_lightzoom_cursor')
+                    ->option('zoomOnTrigger', 'Zoom on trigger')
+                        ->setValue(Axis_Catalog_Model_Option_Lightzoom_DomEvent_OnTrigger::getDeafult())
+                        ->setType('select')
+                        ->setDescription('Select none, if you wish to disable this event')
+                        ->setModel('catalog/option_lightzoom_domEvent_onTrigger')
+                    ->option('zoomOffTrigger', 'Zoom off trigger')
+                        ->setValue(Axis_Catalog_Model_Option_Lightzoom_DomEvent_OffTrigger::getDeafult())
+                        ->setType('select')
+                        ->setDescription('Select none, if you wish to disable this event')
+                        ->setModel('catalog/option_lightzoom_domEvent_offTrigger')
+                    ->option('lightboxTrigger', 'Lightbox trigger')
+                        ->setValue(Axis_Catalog_Model_Option_Lightzoom_DomEvent_Trigger::getDeafult())
+                        ->setType('select')
+                        ->setDescription('Select none, if you wish to disable this event')
+                        ->setModel('catalog/option_lightzoom_domEvent_trigger')
+                    ->option('lightboxResizeSpeed', 'Lightbox resize speed', 800)
+                        ->setDescription('Animation speed, ms')
+                    ->option('lightboxFadeSpeed', 'Lightbox fade speed', 300)
+                        ->setDescription('Animation speed, ms')
+                    ->option('lightboxMaskOpacity', 'Mask opacity', 0.8)
+                    ->option('switchImageTrigger', 'Switch image trigger')
+                        ->setValue(Axis_Catalog_Model_Option_Lightzoom_DomEvent_ImageTrigger::getDeafult())
+                        ->setType('select')
+                        ->setDescription('Select none, if you wish to disable this event')
+                        ->setModel('catalog/option_lightzoom_domEvent_imageTrigger')
+                ->section('/lightzoom')
+            ->section('/catalog')
 
-            ->add('catalog/lightzoom/zoomStageWidth', 'Catalog/Lightzoom/Zoomer width', 250)
-            ->add('catalog/lightzoom/zoomStageHeight', 'Zoomer height', 250)
-            ->add('catalog/lightzoom/zoomStagePosition', 'Zoomer position', 'right', 'select', '', array('config_options' => 'left,right'))
-            ->add('catalog/lightzoom/zoomStageOffsetX', 'Zoomer offset-x', 10)
-            ->add('catalog/lightzoom/zoomStageOffsetY', 'Zoomer offset-y', 0)
-            ->add('catalog/lightzoom/zoomLensOpacity', 'Lens opacity', 0.7)
-            ->add('catalog/lightzoom/zoomCursor', 'Lens cursor', 'crosshair', 'select', '', array('config_options' => 'none,default,crosshair,pointer'))
-            ->add('catalog/lightzoom/zoomOnTrigger', 'Zoom on trigger', 'mouseenter', 'select', 'Select none, if you wish to disable this event', array('config_options' => 'none,click,mouseenter'))
-            ->add('catalog/lightzoom/zoomOffTrigger', 'Zoom off trigger', 'mouseleave', 'select', 'Select none, if you wish to disable this event', array('config_options' => 'none,click,mouseleave'))
-            ->add('catalog/lightzoom/lightboxTrigger', 'Lightbox trigger', 'click', 'select', 'Select none, if you wish to disable this event', array('config_options' => 'none,click,dblclick'))
-            ->add('catalog/lightzoom/lightboxResizeSpeed', 'Lightbox resize speed', 800, 'string', 'Animation speed, ms')
-            ->add('catalog/lightzoom/lightboxFadeSpeed', 'Lightbox fade speed', 300, 'string', 'Animation speed, ms')
-            ->add('catalog/lightzoom/lightboxMaskOpacity', 'Mask opacity', 0.8)
-            ->add('catalog/lightzoom/switchImageTrigger', 'Switch image trigger', 'click', 'select', 'Select none, if you wish to disable this event', array('config_options' => 'none,click,mouseenter,dblclick'))
+            ->section('image', 'Images')
+                ->setTranslation('Axis_Catalog')
+                ->section('main', 'General')
+                    ->option('cachePath', 'Cache path', '/media/cache')
+                        ->setDescription('Image cache path, relative to AXIS_ROOT')
+                ->section('/main')
 
-            ->add('image', 'Images', null, null, array('translation_module' => 'Axis_Catalog'))
-            ->add('image/main/cachePath', 'Images/General/Cache path', '/media/cache', 'string', 'Image cache path, relative to AXIS_ROOT')
-            ->add('image/product/cache', 'Images/Product Images/Cache', 1, 'bool', 'Enable image cache')
-            ->add('image/product/widthLarge', 'Large width', 0)
-            ->add('image/product/heightLarge', 'Large height', 0)
-            ->add('image/product/widthMedium', 'Product Info width', 250)
-            ->add('image/product/heightMedium', 'Product Info height', 250)
-            ->add('image/product/widthSmall', 'Small width', 150)
-            ->add('image/product/heightSmall', 'Small height', 150)
-            ->add('image/product/widthThumbnail', 'Thumbnail image width', 40)
-            ->add('image/product/heightThumbnail', 'Thumbnail image height', 40)
-            ->add('image/watermark/enabled', 'Images/Watermark/Enabled', 0, 'bool')
-            ->add('image/watermark/image', 'Image path', 'catalog/watermark.png', 'string', 'Path relative to the skin images folder: catalog/watermark.png')
-            ->add('image/watermark/position', 'Watermark Position', 'bottom_right', 'select', array('config_options' => 'stretch,top_left,top_center,top_right,middle_left,middle_center,middle_right,bottom_left,bottom_center,bottom_right'))
-            ->add('image/watermark/opacity', 'Opacity', 50, 'string', 'Values [0 - 100]')
-            ->add('image/watermark/repeat', 'Repeat', 0, 'bool');
+                ->section('product', 'Product Images')
+                    ->option('cache', 'Cache', true)
+                        ->setType('radio')
+                        ->setDescription('Enable image cache')
+                        ->setModel('core/option_boolean')
+                    ->option('widthLarge', 'Large width')
+                    ->option('heightLarge', 'Large height')
+                    ->option('widthMedium', 'Product Info width', 250)
+                    ->option('heightMedium', 'Product Info height', 250)
+                    ->option('widthSmall', 'Small width', 150)
+                    ->option('heightSmall', 'Small height', 150)
+                    ->option('widthThumbnail', 'Thumbnail image width', 40)
+                    ->option('heightThumbnail', 'Thumbnail image height', 40)
+                ->section('/product')
 
-        Axis::single('admin/acl_resource')
-            ->add('admin/catalog', 'Catalog')
+                ->section('watermark', 'Watermark')
+                    ->option('enabled', 'Enabled', false)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
+                    ->option('image', 'Image path', 'catalog/watermark.png')
+                        ->setDescription('Path relative to the skin images folder: catalog/watermark.png')
+                    ->option('position', 'Watermark Position')
+                        ->setValue(Axis_Catalog_Model_Option_Watermark_Position::getDeafult())
+                        ->setType('select')
+                        ->setModel('catalog/option_watermark_position')
+                    ->option('opacity', 'Opacity', 50)
+                        ->setDescription('Values [0 - 100]')
+                    ->option('repeat', 'Repeat', false)
+                        ->setType('radio')
+                        ->setModel('core/option_boolean')
 
-            ->add('admin/catalog_index', 'Products/Categories')
-            ->add("admin/catalog_index/batch-save-product")
-            //->add("admin/catalog_index/category-tree")
-            ->add("admin/catalog_index/get-options")
-            ->add("admin/catalog_index/get-product-info")
-            ->add("admin/catalog_index/index")
-            ->add("admin/catalog_index/list-bestseller")
-            ->add("admin/catalog_index/list-products")
-            ->add("admin/catalog_index/list-viewed")
-            ->add("admin/catalog_index/move-products")
-            ->add("admin/catalog_index/remove-product")
-            ->add("admin/catalog_index/remove-product-from-category")
-            ->add("admin/catalog_index/remove-product-from-site")
-            ->add("admin/catalog_index/save-image")
-            ->add("admin/catalog_index/save-product")
-            ->add("admin/catalog_index/update-search-index")
-
-            ->add('admin/catalog_product', 'Product Attributes')
-
-            ->add('admin/catalog_product-attributes', 'Attributes')
-            ->add("admin/catalog_product-attributes/delete")
-            ->add("admin/catalog_product-attributes/edit")
-            ->add("admin/catalog_product-attributes/index")
-            ->add("admin/catalog_product-attributes/list")
-            ->add("admin/catalog_product-attributes/save")
-
-            ->add('admin/catalog_product-option-valueset', 'Product Attributes ValueSet')
-            ->add("admin/catalog_product-option-valueset/delete-sets")
-            ->add("admin/catalog_product-option-valueset/delete-values")
-            ->add("admin/catalog_product-option-valueset/index")
-            ->add("admin/catalog_product-option-valueset/list-sets")
-            ->add("admin/catalog_product-option-valueset/list-values")
-            ->add("admin/catalog_product-option-valueset/save-set")
-            ->add("admin/catalog_product-option-valueset/save-values")
-
-            ->add('admin/catalog_manufacturer', 'Manufacturer')
-            ->add("admin/catalog_manufacturer/delete")
-            ->add("admin/catalog_manufacturer/index")
-            ->add("admin/catalog_manufacturer/list")
-            ->add("admin/catalog_manufacturer/save")
-            ->add("admin/catalog_manufacturer/save-image")
-
-            ->add("admin/catalog_image", 'Catalog Images')
-            ->add("admin/catalog_image/save-image")
-            ->add("admin/catalog_image/tree-panel")
-
-            ->add("admin/catalog_category", "Catalog categories")
-            ->add("admin/catalog_category/delete")
-            ->add("admin/catalog_category/form")
-            ->add("admin/catalog_category/get-data")
-            ->add("admin/catalog_category/get-items")
-            ->add("admin/catalog_category/move")
-            ->add("admin/catalog_category/save");
+            ->section('/');
 
         Axis::single('core/page')
             ->add('catalog/*/*')
@@ -463,10 +467,5 @@ class Axis_Catalog_Upgrade_0_2_3 extends Axis_Core_Model_Migration_Abstract
             ->add('catalog/index/view')
             ->add('catalog/product-compare/*')
             ->add('catalog/product-compare/index');
-    }
-
-    public function down()
-    {
-
     }
 }

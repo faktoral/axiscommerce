@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Locale
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -29,6 +29,9 @@ $config = array(
         'name'     => 'Locale',
         'version'  => '0.1.3',
         'required' => 1,
+        'depends'  => array(
+            'Axis_Core' => '0.2.9'
+        ),
         'events'   => array(
             'admin_box_navigation_prepare' => array(
                 'prepare_menu' => array(

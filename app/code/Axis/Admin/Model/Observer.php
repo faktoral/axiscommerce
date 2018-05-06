@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Admin
  * @subpackage  Axis_Admin_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -42,7 +42,8 @@ class Axis_Admin_Model_Observer
                 'module'        => 'Axis_Admin',
                 'controller'    => 'index',
                 'action'        => 'index',
-                'route'         => 'admin'
+                'route'         => 'admin/axis/admin',
+                'resource'      => 'admin/axis/admin/index/index'
             ),
             'admin' => array(
                 'label'         => 'Administrate',
@@ -56,15 +57,17 @@ class Axis_Admin_Model_Observer
                         'module'        => 'Axis_Admin',
                         'controller'    => 'user',
                         'action'        => 'index',
-                        'route'         => 'admin'
+                        'route'         => 'admin/axis/admin',
+                        'resource'      => 'admin/axis/admin/user/index'
                     ),
                     'role' => array(
                         'label'         => 'Roles',
                         'order'         => 40,
                         'module'        => 'Axis_Admin',
-                        'controller'    => 'role',
+                        'controller'    => 'acl-role',
                         'action'        => 'index',
-                        'route'         => 'admin'
+                        'route'         => 'admin/axis/admin',
+                        'resource'      => 'admin/axis/admin/acl-role/index'
                     )
                 )
             )

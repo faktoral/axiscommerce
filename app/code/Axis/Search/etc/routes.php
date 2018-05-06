@@ -19,12 +19,12 @@
  *
  * @category    Axis
  * @package     Axis_Search
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
 $router->addRoute('search', new Axis_Controller_Router_Route_Front(
-    'search/:controller/:action/*',
+    'search',
     array(
         'module'     => 'Axis_Search',
         'controller' => 'index',
@@ -41,11 +41,11 @@ $router->addRoute('search_result', new Axis_Controller_Router_Route_Front(
     )
 ));
 
-$router->addRoute('admin/search', new Axis_Controller_Router_Route_Back(
+$router->addRoute('admin/axis/search', new Axis_Controller_Router_Route_Back(
     'search/:action/*',
     array(
         'module'     => 'Axis_Search',
         'controller' => 'index',
         'action'     => 'index'
     )
-), 'admin');
+), 'admin/axis/admin');

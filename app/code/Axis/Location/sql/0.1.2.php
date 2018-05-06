@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Location
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Location_Upgrade_0_1_2 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -540,44 +540,21 @@ class Axis_Location_Upgrade_0_1_2 extends Axis_Core_Model_Migration_Abstract
 
         ");
 
-        Axis::model('location/address_format')->insert(array(
+        $optionId = Axis::model('location/address_format')->insert(array(
             'name'              => 'ISO/IEC 19773',
             'address_format'    => '{{firstname}} {{lastname}}EOL{{if company}}{{company}}EOL{{/if}}{{if street_address}}{{street_address}}EOL{{/if}}{{if suburb}}{{suburb}}EOL{{/if}}{{if city}}{{city}}{{/if}} {{if zone.name}}{{zone.name}} {{/if}}{{if postcode}}{{postcode}}{{/if}}{{if country}}EOL{{country.name}}EOL{{/if}}{{if phone}}T: {{phone}}EOL{{/if}}{{if fax}}F: {{fax}}EOL{{/if}}',
             'address_summary'   => '{{firstname}} {{lastname}}'
         ));
 
-        Axis::single('admin/acl_resource')
-            ->add('admin/location', 'Locations/Taxes')
-            ->add('admin/location_country', 'Countries')
-            ->add("admin/location_country/delete")
-            ->add("admin/location_country/get-address-format")
-            ->add("admin/location_country/index")
-            ->add("admin/location_country/list")
-            ->add("admin/location_country/save")
+        $this->getConfigBuilder()
+            ->section('locale', 'Locale')
+                ->setTranslation('Axis_Locale')
+                ->section('main', 'General')
+                    ->option('addressFormat', 'Default Address Format', $optionId)
+                        ->setType('select')
+                        ->setDescription('Default address format')
+                        ->setModel('location/option_address_format')
 
-            ->add('admin/location_zone', 'Zones')
-            ->add("admin/location_zone/delete")
-            ->add("admin/location_zone/index")
-            ->add("admin/location_zone/list")
-            ->add("admin/location_zone/save")
-            ->add('admin/location_zone-definition', 'Zones Definitions')
-
-            ->add("admin/location_zone-definition/delete-assigns")
-            ->add("admin/location_zone-definition/delete")
-            ->add("admin/location_zone-definition/get-assign")
-            ->add("admin/location_zone-definition/index")
-            ->add("admin/location_zone-definition/list-assigns")
-            ->add("admin/location_zone-definition/list")
-            ->add("admin/location_zone-definition/save-assign")
-            ->add("admin/location_zone-definition/save");
-
-        Axis::single('core/config_field')
-            ->add('locale', 'Locale', null, null, array('translation_module' => 'Axis_Locale'))
-            ->add('locale/main/addressFormat', 'Locale/General/Default Address Format', 1, 'select', 'Default address format', array('model' => 'AddressFormat'));
-    }
-
-    public function down()
-    {
-
+            ->section('/');
     }
 }

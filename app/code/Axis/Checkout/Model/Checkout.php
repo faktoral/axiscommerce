@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Checkout
  * @subpackage  Axis_Checkout_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -100,7 +100,7 @@ class Axis_Checkout_Model_Checkout extends Axis_Object
     public function getStorage()
     {
         if (!$this->_storage instanceof Zend_Session_Namespace) {
-            $this->_storage = new Zend_Session_Namespace('Checkout');
+            $this->_storage = Axis::session('Checkout');
         }
         return $this->_storage;
     }
@@ -461,11 +461,12 @@ class Axis_Checkout_Model_Checkout extends Axis_Object
 
         $method = Axis_Shipping::getMethod($data['method']);
         if (!$method instanceof Axis_Method_Shipping_Model_Abstract
+            || !$method->isEnabled()
             || !$method->isAllowed($this->getShippingRequest())) {
 
             throw new Axis_Exception(
                 Axis::translate('checkout')->__(
-                    'Selected shipping method in not allowed'
+                    'Selected shipping method is not allowed'
                 )
             );
         }
@@ -508,7 +509,7 @@ class Axis_Checkout_Model_Checkout extends Axis_Object
 
             throw new Axis_Exception(
                 Axis::translate('checkout')->__(
-                    'Selected payment method in not allowed'
+                    'Selected payment method is not allowed'
                 )
             );
         }

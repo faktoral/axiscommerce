@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Axis.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -158,7 +158,7 @@ var Chart = {
     }
 }
 
-Ext.chart.Chart.CHART_URL = Axis.secureUrl + '/js/ext-3.3.1/resources/charts.swf';
+Ext.chart.Chart.CHART_URL = Axis.secureUrl + '/js/ext-3.4.0/resources/charts.swf';
 
 Ext.onReady(function(){
 
@@ -176,7 +176,8 @@ Ext.onReady(function(){
         width: 100,
         store: new Ext.data.ArrayStore({
             fields: ['id', 'value'],
-            data : [['day', 'Day'.l()], ['week', 'Week'.l()],
+            data : [
+                ['day', 'Day'.l()], ['week', 'Week'.l()],
                 ['month', 'Month'.l()], ['year', 'Year'.l()]
             ]
         }),
@@ -270,7 +271,7 @@ Ext.onReady(function(){
             xtype: 'columnchart',
             store: store,
             id: 'chart',
-            url: Axis.secureUrl + '/js/ext-3.3.1/resources/charts.swf',
+            url: Axis.secureUrl + '/js/ext-3.4.0/resources/charts.swf',
             xField: 'time',
             yAxis: yAxis,
             xAxis: xAxis,

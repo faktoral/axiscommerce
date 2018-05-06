@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Axis.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -55,7 +55,7 @@ Ext.onReady(function () {
                         xtype: 'button',
                         width: 70,
                         bodyStyle:{padding:'10px'},
-                        text: 'Add Answer',
+                        text: 'Add'.l(),
                         name: 'newAnswer[' + languageId + ']',
                         icon: Axis.skinUrl + '/images/icons/add.png',
                         handler: function (){ Poll().addAnswerRow();}

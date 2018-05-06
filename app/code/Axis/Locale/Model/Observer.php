@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Locale
  * @subpackage  Axis_Locale_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -47,7 +47,8 @@ class Axis_Locale_Model_Observer
                         'module'        => 'Axis_Locale',
                         'controller'    => 'currency',
                         'action'        => 'index',
-                        'route'         => 'admin/locale'
+                        'route'         => 'admin/axis/locale',
+                        'resource'      => 'admin/axis/locale/currency/index'
                     ),
                     'locale/language' => array(
                         'label'         => 'Languages',
@@ -55,7 +56,8 @@ class Axis_Locale_Model_Observer
                         'module'        => 'Axis_Locale',
                         'controller'    => 'language',
                         'action'        => 'index',
-                        'route'         => 'admin/locale'
+                        'route'         => 'admin/axis/locale',
+                        'resource'      => 'admin/axis/locale/language/index'
                     )
                 )
             )

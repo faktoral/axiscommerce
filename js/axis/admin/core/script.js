@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Axis.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -24,11 +24,11 @@ if (typeof Ext != 'object') {
     alert(
         'ExtJs library not found at AXIS_ROOT/js folder'
         + "\n"
-        + 'Download and unpack it under the js folder (AXIS_ROOT/js/ext-3.3.1)'
+        + 'Download and unpack it under the js folder (AXIS_ROOT/js/ext-3.4.0)'
    );
 }
 
-if (typeof Range.prototype.createContextualFragment == "undefined") { // FIX IE9
+if (typeof Range != "undefined" && typeof Range.prototype.createContextualFragment == "undefined") { // FIX IE9
     Range.prototype.createContextualFragment = function(html) {
         var doc = this.startContainer.ownerDocument;
         var container = doc.createElement("div");
@@ -50,11 +50,11 @@ Axis.getUrl = function(url, disableSsl, front) {
         prefix += Axis.adminUrl;
     }
     if (url) {
-        url = url.replace(new RegExp("^[/]+", "g"), "");
+        url = url.replace(/^\/+/g, '');
     } else {
         url = '';
     }
-    return prefix + '/' + url;
+    return (prefix + '/' + url).replace(/\/+$/g, '');
 };
 
 Axis.escape = function (string) {

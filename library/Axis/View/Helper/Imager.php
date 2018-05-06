@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_View
  * @subpackage  Axis_View_Helper
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -45,14 +45,14 @@ class Axis_View_Helper_Imager
     public function __construct()
     {
         $config = Axis::config();
-        $this->_imagesPath = $config->system->path . '/media';
-        $this->_imagesWsPath = '/media';
-        $this->_cachePath = $config->system->path . $config->image->main->cachePath;
-        $this->_cacheWsPath = $config->image->main->cachePath;
-        $this->_watermarkDisplay = (boolean)$config->get('image/watermark/enabled', 1);
-        $this->_watermarkImage = trim($config->get('image/watermark/image', 'catalog/watermark.png'), '/\\ ');
-        $this->_watermarkPosition = $config->get('image/watermark/position', 'bottom_right');
-        $this->_watermarkOpacity = $config->get('image/watermark/opacity', 50);
+        $this->_imagesPath        = $config->system->path . '/media';
+        $this->_imagesWsPath      = '/media';
+        $this->_cachePath         = $config->system->path . $config->image->main->cachePath;
+        $this->_cacheWsPath       = $config->image->main->cachePath;
+        $this->_watermarkDisplay  = (boolean)$config->get('image/watermark/enabled');
+        $this->_watermarkImage    = $config->get('image/watermark/image');
+        $this->_watermarkPosition = $config->get('image/watermark/position');
+        $this->_watermarkOpacity  = $config->get('image/watermark/opacity');
     }
 
     private function _getImgTag($src, $config = array())

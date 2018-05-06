@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Sales
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Sales_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -221,46 +221,34 @@ class Axis_Sales_Upgrade_0_1_7 extends Axis_Core_Model_Migration_Abstract
             'Refund',
             'Failed'
         );
-        $mStatusText = Axis::model('sales/order_status_text');
-        $languages = Axis_Collect_Language::collect();
+        $modelOrderStatusText = Axis::model('sales/order_status_text');
+        $languages = Axis::model('locale/option_language');
         foreach (Axis::model('sales/order_status')->fetchAll() as $status) {
-            foreach ($languages as $langId => $langName) {
-                $mStatusText->createRow(array(
-                    'status_id'     => $status->id,
-                    'language_id'   => $langId,
-                    'status_name'   => $statusText[$status->id]
+            foreach ($languages as $languageId => $langName) {
+                $modelOrderStatusText->createRow(array(
+                    'status_id'   => $status->id,
+                    'language_id' => $languageId,
+                    'status_name' => $statusText[$status->id]
                 ))->save();
             }
         }
+        
+        $this->getConfigBuilder()
+            ->section('sales', 'Sales')
+                ->setTranslation('Axis_Sales')
+                ->section('order', 'Order')
+                    ->option('defaultStatusId', 'Default Order Status', 1)
+                        ->setType('select')
+                        ->setDescription('Default Order Status')
+                        ->setModel('sales/option_order_status')
+                    ->option('order_number_pattern_prefix', 'Prefix for Custom Order Number')
+                    ->option('order_number_pattern', 'Pattern for Custom Order Number', '100000000')
+                        ->setDescription('Please notice: Changing code pattern for existing orders in database can cause problems.')
+                    ->option('email', 'Order notifications reciever', 'email1')
+                        ->setType('select')
+                        ->setDescription('All notifications about new orders will be sended to this email')
+                        ->setModel('core/option_mail_boxes')
 
-        Axis::single('core/config_field')
-            ->add('sales', 'Sales', null, null, array('translation_module' => 'Axis_Sales'))
-            ->add('sales/order/defaultStatusId', 'Sales/Order/Default Order Status', 1, 'select', 'Default Order Status', array('config_options' => '{"1":"pending", "2":"processing"}'))
-            ->add('sales/order/order_number_pattern_prefix', 'Prefix for Custom Order Number', '')
-            ->add('sales/order/order_number_pattern', 'Pattern for Custom Order Number', '100000000', 'Please notice: Changing code pattern for existing orders in database can cause problems.')
-            ->add('sales/order/email', 'Order notifications reciever', 'email1', 'select', 'All notifications about new orders will be sended to this email', array('model' => 'MailBoxes'));
-
-        Axis::single('admin/acl_resource')
-            ->add('admin/sales', 'Sales')
-            ->add('admin/sales_order', 'Orders')
-            ->add("admin/sales_order/delete")
-            ->add("admin/sales_order/get-order-info")
-            ->add("admin/sales_order/index")
-            ->add("admin/sales_order/list")
-            ->add("admin/sales_order/print")
-            ->add("admin/sales_order/set-status")
-            ->add('admin/sales_order-status', 'Orders Statusses')
-            ->add("admin/sales_order-status/batch-save")
-            ->add("admin/sales_order-status/delete")
-            ->add("admin/sales_order-status/get-childs")
-            ->add("admin/sales_order-status/get-info")
-            ->add("admin/sales_order-status/index")
-            ->add("admin/sales_order-status/list")
-            ->add("admin/sales_order-status/save");
-    }
-
-    public function down()
-    {
-
+            ->section('/');
     }
 }

@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Admin
  * @subpackage  Axis_Admin_Controller
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -87,7 +87,6 @@ class Axis_Admin_IndexController extends Axis_Admin_Controller_Back
             ->addSiteFilter($siteId)
             ->count();
 
-        $this->view->sites = Axis_Collect_Site::collect();
         $this->view->date = $date;
         $this->render();
     }

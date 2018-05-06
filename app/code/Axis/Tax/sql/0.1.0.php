@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_Tax
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -30,7 +30,7 @@ class Axis_Tax_Upgrade_0_1_0 extends Axis_Core_Model_Migration_Abstract
 
     public function up()
     {
-        $installer = Axis::single('install/installer');
+        $installer = $this->getInstaller();
 
         $installer->run("
 
@@ -72,29 +72,27 @@ class Axis_Tax_Upgrade_0_1_0 extends Axis_Core_Model_Migration_Abstract
 
         ");
 
-        Axis::single('core/config_field')
-            ->add('tax', 'Tax', null, null, array('translation_module' => 'Axis_Tax'))
-            ->add('tax/main/taxBasis', 'Tax/General/TaxBasis', 'delivery', 'select', 'Address that will be used for tax calculation', array('model' => 'TaxBasis'))
-            ->add('tax/shipping/taxBasis', 'Tax/Shipping Tax/Shipping TaxBasis', 'delivery', 'select', 'Address that will be used for shipping tax calculation', array('model' => 'TaxBasis'))
-            ->add('tax/shipping/taxClass', 'Shipping TaxClass', '1', 'select', 'Tax class that will be used for shipping tax calculation', array('model' => 'TaxClass'));
+        $this->getConfigBuilder()
+            ->section('tax', 'Tax')
+                ->setTranslation('Axis_Tax')
+                ->section('main', 'General')
+                    ->option('taxBasis', 'TaxBasis')
+                        ->setValue(Axis_Tax_Model_Option_Basis::SHIPPING)
+                        ->setType('select')
+                        ->setDescription('Address that will be used for tax calculation')
+                        ->setModel('tax/option_basis')
+                ->section('/main')
+                ->section('shipping', 'Shipping Tax')
+                    ->option('taxBasis', 'Shipping TaxBasis')
+                        ->setValue(Axis_Tax_Model_Option_Basis::SHIPPING)
+                        ->setType('select')
+                        ->setDescription('Address that will be used for shipping tax calculation')
+                        ->setModel('tax/option_basis')
+                    ->option('taxClass', 'Shipping TaxClass', 1)
+                        ->setType('select')
+                        ->setDescription('Tax class that will be used for shipping tax calculation')
+                        ->setModel('tax/option_class')
 
-        Axis::single('admin/acl_resource')
-            ->add('admin/tax', 'Tax')
-            ->add('admin/tax_class', 'Tax Classes')
-            ->add("admin/tax_class/delete")
-            ->add("admin/tax_class/index")
-            ->add("admin/tax_class/list")
-            ->add("admin/tax_class/save")
-
-            ->add('admin/tax_rate', 'Tax Rates')
-            ->add("admin/tax_rate/delete")
-            ->add("admin/tax_rate/index")
-            ->add("admin/tax_rate/list")
-            ->add("admin/tax_rate/save");
-    }
-
-    public function down()
-    {
-
+            ->section('/');
     }
 }

@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Core
  * @subpackage  Axis_Core_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -59,7 +59,8 @@ class Axis_Core_Model_Config_Field_Row extends Axis_Db_Table_Row
                 break;
             }
             $path = substr($path, 0, strrpos($path, '/'));
-            $translationModule = $fields[$path]['translation_module'];
+            $translationModule = isset($fields[$path]['translation_module']) ? 
+                $fields[$path]['translation_module'] :  'Axis_Admin';
         }
         
         if (empty($translationModule)) {

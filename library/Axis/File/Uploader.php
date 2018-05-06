@@ -19,7 +19,7 @@
  *
  * @category    Axis
  * @package     Axis_File
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -29,6 +29,8 @@
  * @package     Axis_File
  * @author      Axis Core Team <core@axiscommerce.com>
  */
+
+//@todo use Zend_File_Transfer 
 class Axis_File_Uploader
 {
     /**

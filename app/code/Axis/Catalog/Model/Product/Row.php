@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Catalog
  * @subpackage  Axis_Catalog_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -129,7 +129,7 @@ class Axis_Catalog_Model_Product_Row extends Axis_Db_Table_Row
     {
         $mImage      = Axis::single('catalog/product_image');
         $mImageTitle = Axis::single('catalog/product_image_title');
-        $languages   = Axis_Collect_Language::collect();
+        $languages   = Axis::model('locale/option_language')->toArray();
 
         $imageTypes     = array('base', 'listing', 'thumbnail');
         $updatedImages  = array();
@@ -184,6 +184,27 @@ class Axis_Catalog_Model_Product_Row extends Axis_Db_Table_Row
     }
 
     /**
+     * Update related products assignment
+     *
+     * @param array $data
+     * @return Axis_Catalog_Model_Product_Row
+     */
+    public function setRelated($data)
+    {
+        $mRelated = Axis::model('catalog/product_related');
+        foreach ($data as $rowData) {
+            $row = $mRelated->getRow($this->id, $rowData['related_product_id']);
+            if (!$rowData['status']) {
+                $row->delete();
+            } else {
+                $row->setFromArray($rowData)
+                    ->save();
+            }
+        }
+        return $this;
+    }
+
+    /**
      * Update discount on product
      *
      * @param array $data
@@ -191,8 +212,13 @@ class Axis_Catalog_Model_Product_Row extends Axis_Db_Table_Row
      */
     public function setSpecial($data)
     {
-        $existSpecialDiscountId = Axis::model('discount/eav')
-            ->getDiscountIdBySpecialAndProductId($this->id);
+        $existSpecialDiscountId = Axis::model('discount/eav')->select('discount_id')
+            ->join('discount_eav', 'de.discount_id = de2.discount_id')
+            ->where("de.entity = 'productId'")
+            ->where('de.value = ?', $this->id)
+            ->where("de2.entity ='special'")
+            ->where('de2.value = 1')
+            ->fetchOne();
 
         $mDiscount = Axis::model('discount/discount');
         if ($existSpecialDiscountId) {
@@ -236,7 +262,7 @@ class Axis_Catalog_Model_Product_Row extends Axis_Db_Table_Row
     public function setDescription($data)
     {
         $tableDesc = Axis::single('catalog/product_description');
-        foreach (Axis_Collect_Language::collect() as $languageId => $name) {
+        foreach (Axis::model('locale/option_language') as $languageId => $_n) {
             if (!$row = $tableDesc->find($this->id, $languageId)->current()) {
                 $row = $tableDesc->createRow();
                 $row->product_id = $this->id;
@@ -333,7 +359,7 @@ class Axis_Catalog_Model_Product_Row extends Axis_Db_Table_Row
     {
         $mAttribute = Axis::single('catalog/product_attribute');
         $mAttributeValue = Axis::single('catalog/product_attribute_value');
-        $languages = Axis_Collect_Language::collect();
+        $languages = Axis::model('locale/option_language')->toArray();
 
         foreach ($data as $property) {
             if (!isset($property['id'])
@@ -730,7 +756,7 @@ class Axis_Catalog_Model_Product_Row extends Axis_Db_Table_Row
         $price = $this->price;
         if (!count($attributeIds)) {
             $discountRule = Axis::single('discount/discount')
-                ->getRuleByProductId($this->id);
+                ->getRulesByProduct($this->id, 0);
             $price = Axis::single('discount/discount')->applyDiscountRule(
                 $price, $discountRule
             );
@@ -772,7 +798,7 @@ class Axis_Catalog_Model_Product_Row extends Axis_Db_Table_Row
             );
         }
         // set discount
-        $discountRule = Axis::single('discount/discount')->getRuleByProductId(
+        $discountRule = Axis::single('discount/discount')->getRulesByProduct(
             $this->id, $variationId
         );
         $price = Axis::single('discount/discount')->applyDiscountRule(

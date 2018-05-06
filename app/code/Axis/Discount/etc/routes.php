@@ -19,15 +19,15 @@
  *
  * @category    Axis
  * @package     Axis_Location
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
-$router->addRoute('admin/discount', new Axis_Controller_Router_Route_Back(
+$router->addRoute('admin/axis/discount', new Axis_Controller_Router_Route_Back(
     'discount/:action/*',
     array(
         'module'     => 'Axis_Discount',
         'controller' => 'index',
         'action'     => 'index'
     )
-), 'admin');
+), 'admin/axis/admin');

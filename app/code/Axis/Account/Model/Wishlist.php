@@ -20,7 +20,7 @@
  * @category    Axis
  * @package     Axis_Account
  * @subpackage  Axis_Account_Model
- * @copyright   Copyright 2008-2011 Axis
+ * @copyright   Copyright 2008-2012 Axis
  * @license     GNU Public License V3.0
  */
 
@@ -94,8 +94,14 @@ class Axis_Account_Model_Wishlist extends Axis_Db_Table
             ->where('cp.id IN (?)', $productIds)
             ->fetchProducts($productIds);
 
+        if (!count($products)) {
+            return array();
+        }
+
         foreach ($wishlist as &$item) {
-            $item['product'] = $products[$item['product_id']];
+            if (isset($products[$item['product_id']])) {
+                $item['product'] = $products[$item['product_id']];
+            }
         }
         return $wishlist;
     }
